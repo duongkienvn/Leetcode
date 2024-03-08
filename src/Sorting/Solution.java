@@ -398,24 +398,24 @@ public class Solution {
         int n = arr.length;
         int zeros = 0;
 
-        for(int num: arr){
-            if(num == 0)
+        for (int num : arr) {
+            if (num == 0)
                 zeros++;
         }
 
         int orginalIndex = n - 1;
         int modifiedIndex = n - 1 + zeros;
 
-        while(orginalIndex >= 0 && modifiedIndex >= 0){
+        while (orginalIndex >= 0 && modifiedIndex >= 0) {
 
-            if(arr[orginalIndex] == 0) {
-                if(modifiedIndex < n){
+            if (arr[orginalIndex] == 0) {
+                if (modifiedIndex < n) {
                     arr[modifiedIndex] = 0;
                 }
                 modifiedIndex--;
             }
 
-            if(orginalIndex < n && modifiedIndex < n){
+            if (orginalIndex < n && modifiedIndex < n) {
                 arr[modifiedIndex] = arr[orginalIndex];
             }
             modifiedIndex--;
@@ -423,13 +423,132 @@ public class Solution {
         }
     }
 
+    public static int bagOfTokensScore(int[] tokens, int power) {
+        Arrays.sort(tokens);
+        int maxScore = 0;
+        int tokensLength = tokens.length;
+        if (power < tokens[0])
+            return 0;
+
+        for (int i = 0; i < tokensLength; i++) {
+            if (power > tokens[i]) {
+                power -= tokens[i];
+                maxScore++;
+            }
+            if (maxScore == 1) {
+
+            }
+        }
+        return maxScore;
+    }
+
+    public static int rightToLeft(int n){
+        if(n == 1)
+            return 1;
+        if(n % 2 == 1)
+            return 2 * leftToRight(n / 2);
+        return 2 * leftToRight(n / 2) - 1;
+    }
+
+    public static int leftToRight(int n){
+        if(n == 1)
+            return 1;
+        return 2 * rightToLeft(n / 2);
+    }
+    public static int lastRemaining(int n) {
+        return leftToRight(n);
+    }
+
+    public static boolean isSymmetrical(String s){
+        int left = 0, right = s.length() - 1;
+        while(left < right){
+            if(s.charAt(left) != s.charAt(right))
+                return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+    public static int minimumLength(String s) {
+
+        int left = 0, right = s.length() - 1;
+        while(left < right && s.charAt(left) == s.charAt(right)){
+            char currentChar = s.charAt(left);
+            while(left <= right && s.charAt(left) == currentChar){
+                left++;
+            }
+            while(left <= right && s.charAt(right) == currentChar){
+                right--;
+            }
+        }
+        return right - left + 1;
+    }
+
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+
+        List<Integer> result = new ArrayList<>();
+        int arrLength = arr.length;
+        for(int i = 0; i < arrLength; i++){
+
+        }
+        return result;
+    }
+
+    public static String customSortString(String order, String s) {
+        String result = "";
+        String tmp = "";
+        LinkedHashSet<Character> set = new LinkedHashSet<>();
+        for(char c: order.toCharArray()){
+            set.add(c);
+        }
+        int cnt = 0;
+        for(int i = 0; i < s.length(); i++){
+            char currentChar = s.charAt(i);
+            if(!set.contains(currentChar)) {
+                tmp += currentChar;
+            }
+            else{
+                cnt++;
+            }
+        }
+        System.out.println(cnt);
+        for(int i = 0; i < cnt; i++){
+            result += order.charAt(i);
+        }
+        return result + tmp;
+    }
+
+    public static int maxFrequencyElements(int[] nums) {
+        Map<Integer, Integer> frequency = new HashMap<>();
+        for(int i: nums){
+            frequency.put(i, frequency.getOrDefault(i, 0) + 1);
+        }
+
+        int maxFrequency = Integer.MIN_VALUE;
+        for(Map.Entry<Integer, Integer> entry: frequency.entrySet()){
+            if(maxFrequency < entry.getValue()){
+                maxFrequency = entry.getValue();
+            }
+        }
+
+        int result = 0;
+        for(Map.Entry<Integer, Integer> entry: frequency.entrySet()){
+            if(entry.getValue() == maxFrequency){
+                result += maxFrequency;
+            }
+        }
+        return result;
+    }
+
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int[] arr = {1, 0, 2, 3, 0, 4, 5, 5};
-        duplicateZeros(arr);
-        for(int i: arr){
-            System.out.print(i + " ");
+        int n = sc.nextInt();
+        int nums[] = new int[n];
+        for(int i = 0; i < n; i++){
+            nums[i] = sc.nextInt();
         }
+        System.out.println(maxFrequencyElements(nums));
 
     }
 }
