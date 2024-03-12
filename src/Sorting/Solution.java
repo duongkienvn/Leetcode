@@ -1,5 +1,6 @@
 package Sorting;
 
+import java.beans.IntrospectionException;
 import java.util.*;
 
 public class Solution {
@@ -442,42 +443,44 @@ public class Solution {
         return maxScore;
     }
 
-    public static int rightToLeft(int n){
-        if(n == 1)
+    public static int rightToLeft(int n) {
+        if (n == 1)
             return 1;
-        if(n % 2 == 1)
+        if (n % 2 == 1)
             return 2 * leftToRight(n / 2);
         return 2 * leftToRight(n / 2) - 1;
     }
 
-    public static int leftToRight(int n){
-        if(n == 1)
+    public static int leftToRight(int n) {
+        if (n == 1)
             return 1;
         return 2 * rightToLeft(n / 2);
     }
+
     public static int lastRemaining(int n) {
         return leftToRight(n);
     }
 
-    public static boolean isSymmetrical(String s){
+    public static boolean isSymmetrical(String s) {
         int left = 0, right = s.length() - 1;
-        while(left < right){
-            if(s.charAt(left) != s.charAt(right))
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right))
                 return false;
             left++;
             right--;
         }
         return true;
     }
+
     public static int minimumLength(String s) {
 
         int left = 0, right = s.length() - 1;
-        while(left < right && s.charAt(left) == s.charAt(right)){
+        while (left < right && s.charAt(left) == s.charAt(right)) {
             char currentChar = s.charAt(left);
-            while(left <= right && s.charAt(left) == currentChar){
+            while (left <= right && s.charAt(left) == currentChar) {
                 left++;
             }
-            while(left <= right && s.charAt(right) == currentChar){
+            while (left <= right && s.charAt(right) == currentChar) {
                 right--;
             }
         }
@@ -488,7 +491,7 @@ public class Solution {
 
         List<Integer> result = new ArrayList<>();
         int arrLength = arr.length;
-        for(int i = 0; i < arrLength; i++){
+        for (int i = 0; i < arrLength; i++) {
 
         }
         return result;
@@ -498,57 +501,296 @@ public class Solution {
         String result = "";
         String tmp = "";
         LinkedHashSet<Character> set = new LinkedHashSet<>();
-        for(char c: order.toCharArray()){
+        List<Character> list = new ArrayList<>();
+
+        for (char c : order.toCharArray()) {
             set.add(c);
         }
+
         int cnt = 0;
-        for(int i = 0; i < s.length(); i++){
+        for (int i = 0; i < s.length(); i++) {
             char currentChar = s.charAt(i);
-            if(!set.contains(currentChar)) {
+            if (set.contains(currentChar)) {
+                list.add(currentChar);
+            } else
                 tmp += currentChar;
-            }
-            else{
-                cnt++;
-            }
         }
-        System.out.println(cnt);
-        for(int i = 0; i < cnt; i++){
-            result += order.charAt(i);
+        for (char c : list) {
+            System.out.println(c);
+        }
+        Collections.sort(list, new Comparator<Character>() {
+            @Override
+            public int compare(Character o1, Character o2) {
+                int index1 = order.indexOf(o1);
+                int index2 = order.indexOf(o2);
+                return Integer.compare(index1, index2);
+            }
+        });
+
+        for (char c : list) {
+            result += c;
         }
         return result + tmp;
     }
 
     public static int maxFrequencyElements(int[] nums) {
         Map<Integer, Integer> frequency = new HashMap<>();
-        for(int i: nums){
+        for (int i : nums) {
             frequency.put(i, frequency.getOrDefault(i, 0) + 1);
         }
 
         int maxFrequency = Integer.MIN_VALUE;
-        for(Map.Entry<Integer, Integer> entry: frequency.entrySet()){
-            if(maxFrequency < entry.getValue()){
+        for (Map.Entry<Integer, Integer> entry : frequency.entrySet()) {
+            if (maxFrequency < entry.getValue()) {
                 maxFrequency = entry.getValue();
             }
         }
 
         int result = 0;
-        for(Map.Entry<Integer, Integer> entry: frequency.entrySet()){
-            if(entry.getValue() == maxFrequency){
+        for (Map.Entry<Integer, Integer> entry : frequency.entrySet()) {
+            if (entry.getValue() == maxFrequency) {
                 result += maxFrequency;
             }
         }
         return result;
     }
 
+    public static String customSortStringGPT(String order, String s) {
+        // Create a map to store the index of each character in the order string
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < order.length(); i++) {
+            map.put(order.charAt(i), i);
+        }
+
+        // Sort the characters of string s based on the custom order
+        Character[] charArray = new Character[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            charArray[i] = s.charAt(i);
+        }
+        Arrays.sort(charArray, new Comparator<Character>() {
+            public int compare(Character c1, Character c2) {
+                return map.getOrDefault(c1, Integer.MAX_VALUE) - map.getOrDefault(c2, Integer.MAX_VALUE);
+            }
+        });
+
+        // Build the sorted string
+        StringBuilder sb = new StringBuilder();
+        for (char c : charArray) {
+            sb.append(c);
+        }
+
+        return sb.toString();
+    }
+
+    public static int getCommon(int[] nums1, int[] nums2) {
+        int nums1Length = nums1.length;
+        int nums2Length = nums2.length;
+
+        int i = 0, j = 0;
+        while (i < nums1Length && j < nums2Length) {
+            if (nums1[i] == nums2[j]) {
+                return nums1[i];
+            } else if (nums1[i] < nums2[j]) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+        return -1;
+    }
+
+    public static int findLUSlength(String a, String b) {
+        if (a.equals(b)) return -1;
+        return Math.max(a.length(), b.length());
+    }
+
+    public static boolean isSubsequence2(String a, String b) {
+        int i = 0, j = 0;
+        while (i < a.length() && j < b.length()) {
+            if (a.charAt(i) == b.charAt(j)) {
+                i++;
+            }
+            j++;
+        }
+        return i == a.length();
+    }
+
+    public static int findLUSlength(String[] strs) {
+        int strsLength = strs.length;
+        int maxLength = -1;
+
+        for (int i = 0; i < strsLength; i++) {
+            boolean isUncommon = true;
+            for (int j = 0; j < strsLength; j++) {
+                if (i != j && isSubsequence2(strs[i], strs[j])) {
+                    isUncommon = false;
+                    break;
+                }
+            }
+            if (isUncommon) {
+                maxLength = Math.max(maxLength, strs[i].length());
+            }
+        }
+        return maxLength;
+    }
+
+    public static int findRadius(int[] houses, int[] heaters) {
+        Arrays.sort(houses);
+        Arrays.sort(heaters);
+
+        int maxRadius = 0;
+        int heaterIndex = 0;
+        for (int house : houses) {
+            while (heaterIndex < heaters.length - 1 &&
+                    Math.abs(heaters[heaterIndex + 1] - house) <= Math.abs(heaters[heaterIndex] - house)) {
+                heaterIndex++;
+            }
+            maxRadius = Math.max(maxRadius, Math.abs(heaters[heaterIndex] - house));
+        }
+        return maxRadius;
+
+    }
+
+    public static int startPosition(int a[], int target) {
+        int length = a.length;
+        int left = 0, right = length - 1;
+        int result = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (a[mid] == target) {
+                result = mid;
+                right = mid - 1;
+            } else if (a[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return result;
+    }
+
+    public static int lastPosition(int a[], int target) {
+        int length = a.length;
+        int left = 0, right = length - 1;
+        int result = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (a[mid] == target) {
+                result = mid;
+                left = mid + 1;
+            } else if (a[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return result;
+    }
+
+    public static int[] searchRange(int[] a, int target) {
+        int result[] = new int[2];
+        result[0] = startPosition(a, target);
+        result[1] = lastPosition(a, target);
+        return result;
+    }
+
+    public static List<String> topKFrequent(String[] words, int k) {
+        int wordsLength = words.length;
+        Map<String, Integer> frequency = new HashMap<>();
+        for (String word : words) {
+            frequency.put(word, frequency.getOrDefault(word, 0) + 1);
+        }
+        Arrays.sort(words, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                int frequencyCompare = frequency.get(o2).compareTo(frequency.get(o1));
+                if (frequencyCompare == 0) {
+                    return o1.compareTo(o2);
+                }
+                return frequencyCompare;
+            }
+        });
+        List<String> temp = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            boolean check = false;
+            for (int j = 0; j < i; j++) {
+                if (words[i].equals(words[j])) {
+                    check = true;
+                }
+            }
+            if (!check) {
+                temp.add(words[i]);
+            }
+        }
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            result.add(temp.get(i));
+        }
+        return result;
+    }
+
+    public static List<String> topKFrequentGPT(String words[], int k) {
+        Map<String, Integer> frequencyMap = new HashMap<>();
+        for (String word : words) {
+            frequencyMap.put(word, frequencyMap.getOrDefault(word, 0) + 1);
+        }
+
+        PriorityQueue<String> priorityQueue = new PriorityQueue<>(
+                (a, b) -> frequencyMap.get(a).equals(frequencyMap.get(b)) ?
+                        b.compareTo(a) : frequencyMap.get(a) - frequencyMap.get(b)
+        );
+
+        for(String word: frequencyMap.keySet()){
+            priorityQueue.offer(word);
+            if(priorityQueue.size() > k){
+                priorityQueue.poll();
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        while(!priorityQueue.isEmpty()){
+            result.add(priorityQueue.poll());
+        }
+        Collections.reverse(result);
+        return result;
+    }
+
+    public int[] topKFrequent(int[] nums, int k) {
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        int tmp[] = new int[k];
+        int idx = 0;
+        int n = nums.length;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            if (map.containsKey(nums[i])) {
+                int cnt = map.get(nums[i]);
+                cnt++;
+                map.put(nums[i], cnt);
+            } else {
+                map.put(nums[i], 1);
+            }
+        }
+        List<Map.Entry<Integer, Integer>> entryList = new ArrayList<>(map.entrySet());
+        Collections.sort(entryList, new Comparator<Map.Entry<Integer, Integer>>() {
+            public int compare(Map.Entry<Integer, Integer> entry1, Map.Entry<Integer, Integer> entry2) {
+                return entry2.getValue().compareTo(entry1.getValue());
+            }
+        });
+        for (Map.Entry<Integer, Integer> entry : entryList) {
+            arr.add(entry.getKey());
+        }
+        for (int i = 0; i < k; i++) {
+            tmp[idx++] = arr.get(i);
+        }
+        return tmp;
+
+    }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int nums[] = new int[n];
-        for(int i = 0; i < n; i++){
-            nums[i] = sc.nextInt();
-        }
-        System.out.println(maxFrequencyElements(nums));
+        int[] houses = {1, 2, 3, 5, 6, 7, 8, 10, 12};
+        int[] heaters = {2, 4, 6, 8, 10};
+        System.out.println("Minimum radius required: " + findRadius(houses, heaters));
 
     }
 }
