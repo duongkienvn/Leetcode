@@ -1,6 +1,6 @@
 package Sorting;
 
-import java.beans.IntrospectionException;
+import javax.swing.*;
 import java.util.*;
 
 public class Solution {
@@ -740,15 +740,15 @@ public class Solution {
                         b.compareTo(a) : frequencyMap.get(a) - frequencyMap.get(b)
         );
 
-        for(String word: frequencyMap.keySet()){
+        for (String word : frequencyMap.keySet()) {
             priorityQueue.offer(word);
-            if(priorityQueue.size() > k){
+            if (priorityQueue.size() > k) {
                 priorityQueue.poll();
             }
         }
 
         List<String> result = new ArrayList<>();
-        while(!priorityQueue.isEmpty()){
+        while (!priorityQueue.isEmpty()) {
             result.add(priorityQueue.poll());
         }
         Collections.reverse(result);
@@ -786,11 +786,339 @@ public class Solution {
 
     }
 
+    public static String largestWordCount(String[] messages, String[] senders) {
+        String result = "";
+        int messagesLength = messages.length;
+        int sendersLength = senders.length;
+        Map<String, Integer> countWords = new HashMap<>();
+        for (int i = 0; i < messagesLength; i++) {
+            String word[] = messages[i].split(" ");
+            countWords.put(senders[i], countWords.getOrDefault(senders[i], 0) + word.length);
+        }
+
+        List<Map.Entry<String, Integer>> list = new ArrayList<>(countWords.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+            public int compare(Map.Entry<String, Integer> entry1, Map.Entry<String, Integer> entry2) {
+                if (entry1.getValue() == entry2.getValue()) {
+                    return entry1.getKey().compareTo(entry2.getKey());
+                }
+                return entry1.getValue() - entry2.getValue();
+            }
+        });
+
+        for (Map.Entry<String, Integer> entry : list) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+
+        int maxWordCount = Integer.MIN_VALUE;
+        for (Map.Entry<String, Integer> entry : list) {
+            if (maxWordCount <= entry.getValue()) {
+                maxWordCount = entry.getValue();
+                result = entry.getKey();
+            }
+        }
+
+        return result;
+    }
+
+    public static int numSubarraysWithSum(int[] nums, int goal) {
+        int numsLength = nums.length;
+        int countSubArrays = 0;
+        int left = 0;
+        int sum = 0;
+        for (int right = 0; right < numsLength; right++) {
+            sum += nums[right];
+            if (sum == goal) {
+                countSubArrays++;
+                continue;
+            }
+            while (left < numsLength && sum != goal) {
+                sum -= nums[left];
+                if (sum == goal) {
+                    countSubArrays++;
+                    left++;
+                }
+
+            }
+        }
+        return countSubArrays;
+    }
+
+    public static int numSubarraysWithSumC2(int[] nums, int goal) {
+        int numsLength = nums.length;
+        int prefix[] = new int[numsLength];
+        prefix[0] = nums[0];
+        for (int i = 1; i < numsLength; i++) {
+            prefix[i] = prefix[i - 1] + nums[i];
+        }
+
+        int cnt = 0;
+        int length = prefix.length;
+        for (int i = 0; i < length - 1; i++) {
+            for (int j = i + 1; j < length; j++) {
+                if (prefix[j] - prefix[i] == goal) {
+                    cnt += goal;
+                }
+            }
+        }
+        return cnt;
+
+    }
+
+    public static String largestWordCountGPT(String[] messages, String[] senders) {
+        String largestSender = "";
+        int messagesLength = messages.length;
+        Map<String, Integer> countWords = new HashMap<>();
+        for (int i = 0; i < messagesLength; i++) {
+            String word[] = messages[i].split(" ");
+            countWords.put(senders[i], countWords.getOrDefault(senders[i], 0) + word.length);
+        }
+
+        int maxWordCount = Integer.MIN_VALUE;
+        for (Map.Entry<String, Integer> entry : countWords.entrySet()) {
+            String sender = entry.getKey();
+            int wordCount = entry.getValue();
+            if (maxWordCount < wordCount || (maxWordCount == wordCount && sender.compareTo(largestSender) > 0)) {
+                maxWordCount = wordCount;
+                largestSender = sender;
+            }
+        }
+
+        return largestSender;
+    }
+
+    public static int findPairs(int[] nums, int k) {
+
+        int numsLength = nums.length;
+        Set<Integer> set = new HashSet<>();
+        int result = 0;
+        Arrays.sort(nums);
+        int left = 0;
+        while (left < numsLength) {
+            int right = left + 1;
+            while (right < numsLength && Math.abs(nums[right] - nums[left]) != k) {
+                right++;
+            }
+            if (right < numsLength && Math.abs(nums[left] - nums[right]) == k) {
+                set.add(nums[left]);
+            }
+            left++;
+        }
+        return set.size();
+    }
+
+    public static int findPairsGPT(int[] nums, int k) {
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int num : nums) {
+            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+        }
+
+        int count = 0;
+        for (int key : countMap.keySet()) {
+            if (k == 0 && countMap.get(key) > 1) {
+                count++;
+            } else if (k > 0 && countMap.containsKey(key + k)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static int findMinDifference(List<String> timePoints) {
+
+        List<Integer> minutes = new ArrayList<>();
+        for (int i = 0; i < timePoints.size(); i++) {
+            String time[] = timePoints.get(i).split(":");
+            int hour = Integer.valueOf(time[0]);
+            int minute = Integer.valueOf(time[1]);
+            int totalMinute = hour * 60 + minute;
+            minutes.add(totalMinute);
+        }
+
+        Collections.sort(minutes);
+        int minDiff = Integer.MAX_VALUE;
+        for (int i = 1; i < minutes.size(); i++) {
+            int diff = minutes.get(i) - minutes.get(i - 1);
+            minDiff = Math.min(minDiff, diff);
+        }
+        System.out.println(minDiff);
+        int lastDiff = minutes.get(minutes.size() - 1) - minutes.get(0);
+        minDiff = Math.min(minDiff, 24 * 60 - lastDiff);
+
+        return minDiff;
+    }
+
+    public static int findLongestChain(int[][] pairs) {
+
+        int rowLength = pairs.length;
+        int colLength = pairs[0].length;
+        for (int i = 0; i < rowLength; i++) {
+            for (int j = 0; j < colLength - 1; j++) {
+                for (int k = j + 1; k < colLength; k++) {
+                    if (pairs[i][j] > pairs[i][k]) {
+                        int temp = pairs[i][j];
+                        pairs[i][j] = pairs[i][k];
+                        pairs[i][k] = temp;
+                    }
+                }
+            }
+        }
+        int longestChain = 0;
+        for (int i = 0; i < rowLength - 1; i++) {
+            System.out.println(pairs[i][colLength - 1] + " " + pairs[i + 1][0]);
+            if (pairs[i][colLength - 1] < pairs[i + 1][0]) {
+                longestChain++;
+            }
+        }
+        return longestChain;
+    }
+
+    public static int pivotInteger(int n) {
+        int result = -1;
+        int prefix[] = new int[n];
+        prefix[0] = 1;
+        prefix[1] = 3;
+        for (int i = 2; i < n; i++) {
+            prefix[i] = prefix[i - 1] + i + 1;
+        }
+        for (int i = 1; i < prefix.length; i++) {
+            if (prefix[prefix.length - 1] - prefix[i - 1] == prefix[i]) {
+                result = i + 1;
+            }
+        }
+        for (int i : prefix) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        return result;
+
+    }
+
+    public static boolean uniqueOccurrences(int[] arr) {
+        Map<Integer, Integer> frequency = new HashMap<>();
+        for (int i : arr) {
+            frequency.put(i, frequency.getOrDefault(i, 0) + 1);
+        }
+
+        Set<Integer> check = new HashSet<>();
+        for (Map.Entry<Integer, Integer> entry : frequency.entrySet()) {
+            if (check.contains(entry.getValue())) {
+                return false;
+            }
+            check.add(entry.getValue());
+        }
+
+        return true;
+    }
+
+    public static int[] productExceptSelf(int[] nums) {
+        int numsLength = nums.length;
+        int result[] = new int[numsLength];
+        int prefixProducts[] = new int[numsLength];
+        int suffixProduct[] = new int[numsLength];
+
+        prefixProducts[0] = 1;
+        for (int i = 1; i < numsLength; i++) {
+            prefixProducts[i] = prefixProducts[i - 1] * nums[i - 1];
+        }
+
+        suffixProduct[numsLength - 1] = 1;
+        for (int i = numsLength - 2; i >= 0; i--) {
+            suffixProduct[i] = suffixProduct[i + 1] * nums[i + 1];
+        }
+
+        for (int i = 0; i < numsLength; i++) {
+            result[i] = prefixProducts[i] * suffixProduct[i];
+        }
+
+        return result;
+    }
+
+    public static int[] productExceptSelfGPT(int[] nums) {
+        int n = nums.length;
+
+        // Initialize arrays to store prefix and suffix products
+        int[] prefixProducts = new int[n];
+        int[] suffixProducts = new int[n];
+
+        // Fill prefixProducts array
+        prefixProducts[0] = 1;
+        for (int i = 1; i < n; i++) {
+            prefixProducts[i] = prefixProducts[i - 1] * nums[i - 1];
+        }
+
+        // Fill suffixProducts array
+        suffixProducts[n - 1] = 1;
+        for (int i = n - 2; i >= 0; i--) {
+            suffixProducts[i] = suffixProducts[i + 1] * nums[i + 1];
+        }
+
+        // Calculate the product except self
+        int[] result = new int[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = prefixProducts[i] * suffixProducts[i];
+        }
+
+        for (int i : prefixProducts) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        for (int i : suffixProducts) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+
+        return result;
+    }
+
+    public static int[] smallerNumbersThanCurrent(int[] nums) {
+        int numsLength = nums.length;
+        int result[] = new int[numsLength];
+
+        int sortedNums[] = Arrays.copyOf(nums, numsLength);
+        Arrays.sort(sortedNums);
+
+        Map<Integer, Integer> numCount = new HashMap<>();
+        for (int i = 0; i < numsLength; i++) {
+            if(!numCount.containsKey(sortedNums[i])){
+                numCount.put(sortedNums[i], i);
+            }
+        }
+
+        for (int i = 0; i < numsLength; i++) {
+            result[i] = numCount.get(nums[i]);
+        }
+
+        return result;
+    }
+
+    public static int[] smallerNumbersThanCurrentGPT(int[] nums) {
+        int numsLength = nums.length;
+        int result[] = new int[numsLength];
+
+        int sortedNums[] = Arrays.copyOf(nums, numsLength);
+        Arrays.sort(sortedNums);
+
+        Map<Integer, Integer> numCount = new HashMap<>();
+        for (int i = 0; i < numsLength; i++) {
+            numCount.putIfAbsent(sortedNums[i], i);
+        }
+
+        for (int i = 0; i < numsLength; i++) {
+            result[i] = numCount.get(nums[i]);
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int[] houses = {1, 2, 3, 5, 6, 7, 8, 10, 12};
-        int[] heaters = {2, 4, 6, 8, 10};
-        System.out.println("Minimum radius required: " + findRadius(houses, heaters));
+        int n = sc.nextInt();
+        int nums[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = sc.nextInt();
+        }
+        System.out.println(productExceptSelfGPT(nums));
 
     }
 }
