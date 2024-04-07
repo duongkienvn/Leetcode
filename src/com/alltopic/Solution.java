@@ -1,6 +1,5 @@
-package Sorting;
+package com.alltopic;
 
-import javax.swing.*;
 import java.util.*;
 
 public class Solution {
@@ -27,8 +26,7 @@ public class Solution {
             }
         });
         for (String word : dictionary) {
-            if (isSubsequence(word, s))
-                return word;
+            if (isSubsequence(word, s)) return word;
         }
         return "";
     }
@@ -101,7 +99,7 @@ public class Solution {
     public int[] findRightInterval(int[][] intervals) {
         int row = intervals.length;
         int col = intervals[0].length;
-        int result[] = new int[row];
+        int[] result = new int[row];
         if (row == 1) {
             return new int[-1];
         }
@@ -148,19 +146,15 @@ public class Solution {
         System.out.println(half);
         if (max % 2 == 0) {
             for (int i : nums) {
-                if (half > i)
-                    cnt += half - i;
-                else if (half < i)
-                    cnt += i - half;
+                if (half > i) cnt += half - i;
+                else if (half < i) cnt += i - half;
             }
 
         } else {
             half++;
             for (int i : nums) {
-                if (half > i)
-                    cnt += half - i;
-                else if (half < i)
-                    cnt += i - half;
+                if (half > i) cnt += half - i;
+                else if (half < i) cnt += i - half;
             }
         }
         return cnt;
@@ -201,10 +195,8 @@ public class Solution {
     public static String maximumOddBinaryNumberLeetcode(String s) {
         int countOne = 0, countZero = 0;
         for (char c : s.toCharArray()) {
-            if (c == '1')
-                countOne++;
-            else
-                countZero++;
+            if (c == '1') countOne++;
+            else countZero++;
         }
         StringBuilder result = new StringBuilder();
 
@@ -234,7 +226,7 @@ public class Solution {
         }
     }
 
-    public static void swapCharacter(char charArray[], int left, int right) {
+    public static void swapCharacter(char[] charArray, int left, int right) {
         char temp = charArray[left];
         charArray[left] = charArray[right];
         charArray[right] = temp;
@@ -242,7 +234,7 @@ public class Solution {
 
     public static String reverseVowels(String s) {
         // reverse vowels of string
-        char chars[] = s.toCharArray();
+        char[] chars = s.toCharArray();
         HashSet<Character> vowels = new HashSet<>();
         vowels.add('u');
         vowels.add('e');
@@ -273,7 +265,7 @@ public class Solution {
 
     public static int[] sortedSquares(int[] nums) {
         int numsLength = nums.length;
-        int result[] = new int[numsLength];
+        int[] result = new int[numsLength];
 
         for (int i = 0; i < numsLength; i++) {
             result[i] = (int) Math.pow(nums[i], 2);
@@ -290,7 +282,7 @@ public class Solution {
 
     public static int[] sortedSquaresLeetcode(int[] nums) {
         int numsLength = nums.length;
-        int result[] = new int[numsLength];
+        int[] result = new int[numsLength];
 
         // find first postition of non-negative factor
         int nonNegativeStart = 0;
@@ -328,8 +320,7 @@ public class Solution {
     public static boolean isPalindrome(String s, int left, int right) {
 
         while (left < right) {
-            if (s.charAt(left) != s.charAt(right))
-                return false;
+            if (s.charAt(left) != s.charAt(right)) return false;
             left++;
             right--;
         }
@@ -344,8 +335,7 @@ public class Solution {
         int left = 0, right = s.length() - 1;
         while (left < right) {
             if (s.charAt(left) != s.charAt(right)) {
-                return isPalindrome(s, left + 1, right)
-                        || isPalindrome(s, left, right - 1);
+                return isPalindrome(s, left + 1, right) || isPalindrome(s, left, right - 1);
             }
             left++;
             right--;
@@ -354,7 +344,7 @@ public class Solution {
     }
 
     public static String reverseOnlyLetters(String s) {
-        char chars[] = s.toCharArray();
+        char[] chars = s.toCharArray();
         int length = chars.length;
 
         int left = 0, right = length - 1;
@@ -386,10 +376,8 @@ public class Solution {
             if (pointerName < nameLength && name.charAt(pointerName) == typed.charAt(pointerTyped)) {
                 pointerName++;
                 pointerTyped++;
-            } else if (pointerTyped > 0 && typed.charAt(pointerTyped) == typed.charAt(pointerTyped - 1))
-                pointerTyped++;
-            else
-                return false;
+            } else if (pointerTyped > 0 && typed.charAt(pointerTyped) == typed.charAt(pointerTyped - 1)) pointerTyped++;
+            else return false;
         }
 
         return pointerName == nameLength;
@@ -400,8 +388,7 @@ public class Solution {
         int zeros = 0;
 
         for (int num : arr) {
-            if (num == 0)
-                zeros++;
+            if (num == 0) zeros++;
         }
 
         int orginalIndex = n - 1;
@@ -428,8 +415,7 @@ public class Solution {
         Arrays.sort(tokens);
         int maxScore = 0;
         int tokensLength = tokens.length;
-        if (power < tokens[0])
-            return 0;
+        if (power < tokens[0]) return 0;
 
         for (int i = 0; i < tokensLength; i++) {
             if (power > tokens[i]) {
@@ -444,16 +430,13 @@ public class Solution {
     }
 
     public static int rightToLeft(int n) {
-        if (n == 1)
-            return 1;
-        if (n % 2 == 1)
-            return 2 * leftToRight(n / 2);
+        if (n == 1) return 1;
+        if (n % 2 == 1) return 2 * leftToRight(n / 2);
         return 2 * leftToRight(n / 2) - 1;
     }
 
     public static int leftToRight(int n) {
-        if (n == 1)
-            return 1;
+        if (n == 1) return 1;
         return 2 * rightToLeft(n / 2);
     }
 
@@ -464,8 +447,7 @@ public class Solution {
     public static boolean isSymmetrical(String s) {
         int left = 0, right = s.length() - 1;
         while (left < right) {
-            if (s.charAt(left) != s.charAt(right))
-                return false;
+            if (s.charAt(left) != s.charAt(right)) return false;
             left++;
             right--;
         }
@@ -512,8 +494,7 @@ public class Solution {
             char currentChar = s.charAt(i);
             if (set.contains(currentChar)) {
                 list.add(currentChar);
-            } else
-                tmp += currentChar;
+            } else tmp += currentChar;
         }
         for (char c : list) {
             System.out.println(c);
@@ -641,8 +622,7 @@ public class Solution {
         int maxRadius = 0;
         int heaterIndex = 0;
         for (int house : houses) {
-            while (heaterIndex < heaters.length - 1 &&
-                    Math.abs(heaters[heaterIndex + 1] - house) <= Math.abs(heaters[heaterIndex] - house)) {
+            while (heaterIndex < heaters.length - 1 && Math.abs(heaters[heaterIndex + 1] - house) <= Math.abs(heaters[heaterIndex] - house)) {
                 heaterIndex++;
             }
             maxRadius = Math.max(maxRadius, Math.abs(heaters[heaterIndex] - house));
@@ -651,7 +631,7 @@ public class Solution {
 
     }
 
-    public static int startPosition(int a[], int target) {
+    public static int startPosition(int[] a, int target) {
         int length = a.length;
         int left = 0, right = length - 1;
         int result = -1;
@@ -669,7 +649,7 @@ public class Solution {
         return result;
     }
 
-    public static int lastPosition(int a[], int target) {
+    public static int lastPosition(int[] a, int target) {
         int length = a.length;
         int left = 0, right = length - 1;
         int result = -1;
@@ -688,7 +668,7 @@ public class Solution {
     }
 
     public static int[] searchRange(int[] a, int target) {
-        int result[] = new int[2];
+        int[] result = new int[2];
         result[0] = startPosition(a, target);
         result[1] = lastPosition(a, target);
         return result;
@@ -716,6 +696,7 @@ public class Solution {
             for (int j = 0; j < i; j++) {
                 if (words[i].equals(words[j])) {
                     check = true;
+                    break;
                 }
             }
             if (!check) {
@@ -729,16 +710,13 @@ public class Solution {
         return result;
     }
 
-    public static List<String> topKFrequentGPT(String words[], int k) {
+    public static List<String> topKFrequentGPT(String[] words, int k) {
         Map<String, Integer> frequencyMap = new HashMap<>();
         for (String word : words) {
             frequencyMap.put(word, frequencyMap.getOrDefault(word, 0) + 1);
         }
 
-        PriorityQueue<String> priorityQueue = new PriorityQueue<>(
-                (a, b) -> frequencyMap.get(a).equals(frequencyMap.get(b)) ?
-                        b.compareTo(a) : frequencyMap.get(a) - frequencyMap.get(b)
-        );
+        PriorityQueue<String> priorityQueue = new PriorityQueue<>((a, b) -> frequencyMap.get(a).equals(frequencyMap.get(b)) ? b.compareTo(a) : frequencyMap.get(a) - frequencyMap.get(b));
 
         for (String word : frequencyMap.keySet()) {
             priorityQueue.offer(word);
@@ -757,7 +735,7 @@ public class Solution {
 
     public int[] topKFrequent(int[] nums, int k) {
         ArrayList<Integer> arr = new ArrayList<Integer>();
-        int tmp[] = new int[k];
+        int[] tmp = new int[k];
         int idx = 0;
         int n = nums.length;
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -792,7 +770,7 @@ public class Solution {
         int sendersLength = senders.length;
         Map<String, Integer> countWords = new HashMap<>();
         for (int i = 0; i < messagesLength; i++) {
-            String word[] = messages[i].split(" ");
+            String[] word = messages[i].split(" ");
             countWords.put(senders[i], countWords.getOrDefault(senders[i], 0) + word.length);
         }
 
@@ -846,7 +824,7 @@ public class Solution {
 
     public static int numSubarraysWithSumC2(int[] nums, int goal) {
         int numsLength = nums.length;
-        int prefix[] = new int[numsLength];
+        int[] prefix = new int[numsLength];
         prefix[0] = nums[0];
         for (int i = 1; i < numsLength; i++) {
             prefix[i] = prefix[i - 1] + nums[i];
@@ -870,7 +848,7 @@ public class Solution {
         int messagesLength = messages.length;
         Map<String, Integer> countWords = new HashMap<>();
         for (int i = 0; i < messagesLength; i++) {
-            String word[] = messages[i].split(" ");
+            String[] word = messages[i].split(" ");
             countWords.put(senders[i], countWords.getOrDefault(senders[i], 0) + word.length);
         }
 
@@ -928,7 +906,7 @@ public class Solution {
 
         List<Integer> minutes = new ArrayList<>();
         for (int i = 0; i < timePoints.size(); i++) {
-            String time[] = timePoints.get(i).split(":");
+            String[] time = timePoints.get(i).split(":");
             int hour = Integer.valueOf(time[0]);
             int minute = Integer.valueOf(time[1]);
             int totalMinute = hour * 60 + minute;
@@ -975,7 +953,7 @@ public class Solution {
 
     public static int pivotInteger(int n) {
         int result = -1;
-        int prefix[] = new int[n];
+        int[] prefix = new int[n];
         prefix[0] = 1;
         prefix[1] = 3;
         for (int i = 2; i < n; i++) {
@@ -1013,9 +991,9 @@ public class Solution {
 
     public static int[] productExceptSelf(int[] nums) {
         int numsLength = nums.length;
-        int result[] = new int[numsLength];
-        int prefixProducts[] = new int[numsLength];
-        int suffixProduct[] = new int[numsLength];
+        int[] result = new int[numsLength];
+        int[] prefixProducts = new int[numsLength];
+        int[] suffixProduct = new int[numsLength];
 
         prefixProducts[0] = 1;
         for (int i = 1; i < numsLength; i++) {
@@ -1073,14 +1051,14 @@ public class Solution {
 
     public static int[] smallerNumbersThanCurrent(int[] nums) {
         int numsLength = nums.length;
-        int result[] = new int[numsLength];
+        int[] result = new int[numsLength];
 
-        int sortedNums[] = Arrays.copyOf(nums, numsLength);
+        int[] sortedNums = Arrays.copyOf(nums, numsLength);
         Arrays.sort(sortedNums);
 
         Map<Integer, Integer> numCount = new HashMap<>();
         for (int i = 0; i < numsLength; i++) {
-            if(!numCount.containsKey(sortedNums[i])){
+            if (!numCount.containsKey(sortedNums[i])) {
                 numCount.put(sortedNums[i], i);
             }
         }
@@ -1094,9 +1072,9 @@ public class Solution {
 
     public static int[] smallerNumbersThanCurrentGPT(int[] nums) {
         int numsLength = nums.length;
-        int result[] = new int[numsLength];
+        int[] result = new int[numsLength];
 
-        int sortedNums[] = Arrays.copyOf(nums, numsLength);
+        int[] sortedNums = Arrays.copyOf(nums, numsLength);
         Arrays.sort(sortedNums);
 
         Map<Integer, Integer> numCount = new HashMap<>();
@@ -1111,14 +1089,730 @@ public class Solution {
         return result;
     }
 
+    public static int findMaxLength(int[] nums) {
+        int numsLength = nums.length;
+        int maxLen = 0, cnt = 0;
+
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        for (int i = 0; i < numsLength; i++) {
+            if (nums[i] == 0) {
+                cnt--;
+            } else {
+                cnt++;
+            }
+
+            if (map.containsKey(cnt)) {
+                maxLen = Math.max(maxLen, i - map.get(cnt));
+            } else {
+                map.put(cnt, i);
+            }
+        }
+        return maxLen;
+    }
+
+    public static int sumOfDigits(int n) {
+        int sum = 0;
+        while (n != 0) {
+            int r = n % 10;
+            sum += r;
+            n /= 10;
+        }
+
+        return sum;
+    }
+
+    public static int countLargestGroup(int n) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        Map<Integer, Integer> sumOfDigits = new HashMap<>();
+        for (int i = 1; i <= n; i++) {
+            int sum = sumOfDigits(i);
+            sumOfDigits.put(i, sum);
+        }
+
+        for (int i = 1; i <= n; i++) {
+            int sum = sumOfDigits(i);
+            if (sumOfDigits.get(i) == sum && !map.containsKey(sum)) {
+                map.put(sum, new ArrayList<>());
+            }
+
+
+        }
+
+        return 1;
+
+    }
+
+    public static String getHint(String secret, String guess) {
+        int bulls = 0;
+        int cows = 0;
+
+        Map<Character, Integer> map = new HashMap<>();
+        for (char ch : secret.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+
+        // Kiểm tra từng chữ số trong đoán của người chơi
+        for (int i = 0; i < secret.length(); i++) {
+            char s = secret.charAt(i);
+            char g = guess.charAt(i);
+            if (s == g) {
+                bulls++; // Nếu chữ số đúng vị trí, tăng số lượng bulls
+                map.put(s, map.get(s) - 1); // Giảm số lượng chữ số còn lại trong số bí mật
+            }
+        }
+
+        // Kiểm tra cows
+        for (int i = 0; i < secret.length(); i++) {
+            char s = secret.charAt(i);
+            char g = guess.charAt(i);
+            if (s != g && map.containsKey(g) && map.get(g) > 0) {
+                cows++; // Nếu chữ số không đúng vị trí nhưng vẫn có trong số bí mật, tăng số lượng cows
+                map.put(g, map.get(g) - 1); // Giảm số lượng chữ số còn lại trong số bí mật
+            }
+        }
+
+        return bulls + "A" + cows + "B";
+    }
+
+    public static int[] arrayRankTransform(int[] arr) {
+        int arrLength = arr.length;
+        int[] result = new int[arrLength];
+
+        TreeSet<Integer> sorted = new TreeSet<>();
+        for (int i : arr) {
+            sorted.add(i);
+        }
+
+        Map<Integer, Integer> sequence = new HashMap<>();
+        int idx = 1;
+        for (int set : sorted) {
+            sequence.put(set, idx++);
+        }
+
+        for (int i = 0; i < arrLength; i++) {
+            result[i] = sequence.get(arr[i]);
+        }
+
+        return result;
+    }
+
+    public static int[] arrayRankTransformC2(int[] arr) {
+        int arrLength = arr.length;
+        int[] copy = Arrays.copyOf(arr, arrLength);
+
+        int index = 1;
+        Arrays.sort(copy);
+        Map<Integer, Integer> rankMap = new HashMap<>();
+        for (int i : copy) {
+            if (!rankMap.containsKey(i)) {
+                rankMap.put(i, index++);
+            }
+        }
+
+        int[] result = new int[arrLength];
+        for (int i = 0; i < arrLength; i++) {
+            result[i] = rankMap.get(arr[i]);
+        }
+
+        return result;
+    }
+
+    public static String reorganizeString(String s) {
+        int length = s.length();
+        Map<Character, Integer> frequency = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            frequency.put(c, frequency.getOrDefault(c, 0) + 1);
+        }
+
+
+        return "";
+    }
+
+    public static int findMaxK(int[] nums) {
+        int numsLength = nums.length;
+        int result = -1;
+        Arrays.sort(nums);
+        Set<Integer> set = new LinkedHashSet<>();
+
+        for (int i : nums) {
+            if (set.contains(-i)) {
+                result = i;
+            }
+            set.add(i);
+        }
+
+        return result;
+    }
+
+    public static String[] sortPeople(String[] names, int[] heights) {
+        TreeMap<Integer, String> map = new TreeMap<>(Collections.reverseOrder());
+
+        for (int i = 0; i < names.length; i++) {
+            map.put(heights[i], names[i]);
+        }
+
+        String[] sortedNames = new String[names.length];
+        int index = 0;
+
+        for (String name : map.values()) {
+            sortedNames[index++] = name;
+        }
+
+        return sortedNames;
+    }
+
+    public static int unequalTriplets(int[] nums) {
+        int numsLength = nums.length;
+        int result = 0;
+
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < numsLength; i++) {
+            map.put(i, nums[i]);
+        }
+
+        for (int i = 0; i < numsLength; i++) {
+
+        }
+        return result;
+    }
+
+    public static int findDuplicate(int[] nums) {
+        int numsLength = nums.length;
+
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i : nums) {
+            map.put(i, map.getOrDefault(i, 0) + 1);
+        }
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() >= 2) {
+                return entry.getKey();
+            }
+        }
+
+        return 0;
+    }
+
+    public static int findDuplicateC2(int[] nums) {
+        boolean taken[] = new boolean[nums.length];
+        for (int i : nums) {
+            if (taken[i]) {
+                return i;
+            }
+            taken[i] = true;
+        }
+        return 0;
+    }
+
+    public static int largestValsFromLabels(int[] values, int[] labels, int numWanted, int useLimit) {
+
+        return 1;
+    }
+
+    public static boolean isGood(int[] nums) {
+        int numsLength = nums.length;
+
+        Arrays.sort(nums);
+        if (numsLength != nums[numsLength - 1] + 1
+                || nums[numsLength - 1] != nums[numsLength - 2]) {
+            return false;
+        }
+
+        for (int i = 1; i < numsLength; i++) {
+            if (i != nums[i - 1]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean isAnagram(String word, String s) {
+        char charWords[] = word.toCharArray();
+        char charS[] = s.toCharArray();
+
+        Arrays.sort(charS);
+        Arrays.sort(charWords);
+
+        return Arrays.equals(charS, charWords);
+    }
+
+    public static List<String> removeAnagrams(String[] words) {
+        List<String> result = new ArrayList<>();
+        int wordsLength = words.length;
+        result.add(words[0]);
+
+        for (int i = 1; i < wordsLength; i++) {
+            if (!isAnagram(words[i - 1], words[i])) {
+                result.add(words[i]);
+            }
+        }
+
+        return result;
+    }
+
+    public static List<String> removeAnagrams(List<String> words) {
+        String previous = "";
+        List<String> result = new ArrayList<>();
+        for (String word : words) {
+            char charArrays[] = word.toCharArray();
+            Arrays.sort(charArrays);
+            String current = String.valueOf(charArrays);
+            if (!current.equals(previous)) {
+                result.add(word);
+                previous = current;
+            }
+        }
+
+        return result;
+    }
+
+    public static int firstMissingPositive(int[] nums) {
+        int n = nums.length;
+        // Đánh dấu tất cả các số âm và các số lớn hơn n bằng 1
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0 || nums[i] > n) {
+                nums[i] = n + 1;
+            }
+        }
+
+        // Đánh dấu các số có mặt trong mảng
+        for (int i = 0; i < n; i++) {
+            int num = Math.abs(nums[i]);
+            if (num <= n) {
+                nums[num - 1] = -Math.abs(nums[num - 1]);
+            }
+        }
+
+        // Tìm số dương nhỏ nhất bị thiếu
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > 0) {
+                return i + 1;
+            }
+        }
+
+        return n + 1;
+    }
+
+    public static int numSubarrayProductLessThanK(int[] nums, int k) {
+        int numsLength = nums.length;
+        int result = 0;
+        int left = 0;
+        int product = 1;
+
+        for (int right = 0; right < numsLength; right++) {
+            product *= nums[right];
+            while (left <= right && product >= k) {
+                product /= nums[left++];
+            }
+            result += right - left + 1;
+        }
+        return result;
+    }
+
+    public static long countSubarrays(int[] nums, int k) {
+        int numsLenght = nums.length;
+        int maxElement = 0;
+        for (int i : nums) {
+            if (maxElement < i) {
+                maxElement = i;
+            }
+        }
+
+        int result = 0;
+        int left = 0;
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < numsLenght; i++) {
+
+        }
+        return 1;
+    }
+
+    public static int[] decrypt(int[] code, int k) {
+        int length = code.length;
+        int decrypted[] = new int[length];
+        if (k == 0) {
+            Arrays.fill(decrypted, 0);
+            return decrypted;
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (k > 0) {
+                int sum = 0;
+                for (int j = 1; j <= k; j++) {
+                    sum += code[(i + j) % length];
+                }
+                decrypted[i] = sum;
+            } else {
+                int sum = 0;
+                for (int j = -1; j >= k; j--) {
+                    sum += code[(i + j + length) % length];
+                }
+                decrypted[i] = sum;
+            }
+        }
+
+        return decrypted;
+    }
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        int strsLength = strs.length;
+        if (strs == null || strsLength == 0) {
+            return new ArrayList<>();
+        }
+
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char charArray[] = str.toCharArray();
+            Arrays.sort(charArray);
+            String sortedSts = String.valueOf(charArray);
+
+            if (!map.containsKey(sortedSts)) {
+                map.put(sortedSts, new ArrayList<>());
+            }
+            map.get(sortedSts).add(str);
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
+    public static boolean isNice(String s) {
+        Set<Character> lowercase = new HashSet<>();
+        Set<Character> uppercase = new HashSet<>();
+
+        for (char c : s.toCharArray()) {
+            if (Character.isLowerCase(c)) {
+                lowercase.add(c);
+            } else {
+                uppercase.add(c);
+            }
+        }
+
+        for (char c : lowercase) {
+            char upper = Character.toUpperCase(c);
+            if (!uppercase.contains(upper)) {
+                return false;
+            }
+        }
+
+        for (char c : uppercase) {
+            char lower = Character.toLowerCase(c);
+            if (!lowercase.contains(lower)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static int lengthOfLastWord(String s) {
+        int length = s.length();
+        int lengthLastWord = 0;
+        String word[] = s.split(" ");
+        lengthLastWord = word[word.length - 1].length();
+        return lengthLastWord;
+    }
+
+    public static String longestNiceSubstring(String s) {
+        int length = s.length();
+        if (s == null || length == 0) {
+            return "";
+        }
+
+        String longestNice = "";
+        for (int i = 0; i < length; i++) {
+            for (int j = i + 1; j <= length; j++) {
+                String substring = s.substring(i, j);
+                if (isNice(substring) && longestNice.length() < substring.length()) {
+                    longestNice = substring;
+                }
+            }
+        }
+
+        return longestNice;
+    }
+
+    public static int countConsistentStrings(String allowed, String[] words) {
+        int wordsLength = words.length;
+        int result = 0;
+        char charAllowed[] = allowed.toCharArray();
+        Set<Character> permitted = new HashSet<>();
+        for (char c : charAllowed) {
+            permitted.add(c);
+        }
+
+        for (String word : words) {
+            boolean check = true;
+            char charWord[] = word.toCharArray();
+            for (char c : charWord) {
+                if (!permitted.contains(c)) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    public static boolean isIsomorphic(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        Map<Character, Character> isIsomorphic = new LinkedHashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char charS = s.charAt(i);
+            char charT = t.charAt(i);
+
+            if (isIsomorphic.containsKey(charS)) {
+                if (isIsomorphic.get(charS) != charT) {
+                    return false;
+                }
+            } else {
+                if (isIsomorphic.containsValue(charT)) {
+                    return false;
+                }
+            }
+            isIsomorphic.put(charS, charT);
+        }
+
+        return true;
+    }
+
+    public static int maxProduct(int[] nums) {
+        int length = nums.length;
+
+        if (length == 0 || nums == null) {
+            return 0;
+        }
+
+        int maxProduct = nums[0];
+        int minProduct = nums[0];
+        int result = nums[0];
+
+        for (int i = 1; i < length; i++) {
+            int current = nums[i];
+            if (current < 0) {
+                int temp = maxProduct;
+                maxProduct = minProduct;
+                minProduct = temp;
+            }
+
+            maxProduct = Math.max(current, maxProduct * current);
+            minProduct = Math.min(current, minProduct * current);
+
+            result = Math.max(result, maxProduct);
+        }
+
+        return result;
+    }
+
+    public static String makeGood(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && Math.abs(stack.peek() - c) == 32) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+
+        StringBuilder goodString = new StringBuilder();
+        for (char c : stack) {
+            goodString.append(c);
+        }
+
+        return String.valueOf(goodString);
+    }
+
+    public static int calPoints(String[] operations) {
+        Stack<Integer> stack = new Stack<>();
+
+        for (String operation : operations) {
+            if (operation.equals("+")) {
+                int top = stack.pop();
+                int newTop = stack.peek() + top;
+                stack.push(top);
+                stack.push(newTop);
+            } else if (operation.equals("D")) {
+                stack.push(2 * stack.peek());
+            } else if (operation.equals("C")) {
+                stack.pop();
+            } else {
+                stack.push(Integer.parseInt(operation));
+            }
+        }
+
+        int sum = 0;
+        for (int score : stack) {
+            sum += score;
+        }
+
+        return sum;
+    }
+
+    public static String removeDuplicates(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && stack.peek().equals(c)) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (char c : stack) {
+            result.append(c);
+        }
+
+        return String.valueOf(result);
+    }
+
+    public static String removeOuterParentheses(String s) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder result = new StringBuilder();
+        int balance = 0, start = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            char currentChar = s.charAt(i);
+            if (currentChar == '(') {
+                balance++;
+            } else {
+                balance--;
+            }
+
+            if (balance == 0) {
+                result.append(s.substring(start + 1, i));
+                start = i + 1;
+            }
+        }
+
+        return String.valueOf(result);
+    }
+
+    public static boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (c == '(' || c == '{' || c == '[') {
+                stack.push(c);
+            } else {
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                char top = stack.pop();
+                if (c == ')' && top != '(' || c == '}' && top != '{' || c == ']' && top != '[') {
+                    return false;
+                }
+            }
+        }
+
+        return stack.isEmpty();
+    }
+
+    public static int minLength(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (c == 'B') {
+                if (!stack.isEmpty() && stack.peek() == 'A') {
+                    stack.pop();
+                } else {
+                    stack.push(c);
+                }
+            } else if (c == 'D') {
+                if (!stack.isEmpty() && stack.peek() == 'C') {
+                    stack.pop();
+                } else {
+                    stack.push(c);
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+
+        return stack.size();
+    }
+
+    public static String minRemoveToMakeValid(String s) {
+        Stack<Integer> stack = new Stack<>();
+
+        boolean removePosition[] = new boolean[s.length()];
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (c == '(') {
+                stack.push(i);
+            } else if (c == ')') {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                } else {
+                    removePosition[i] = true;
+                }
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            removePosition[stack.pop()] = true;
+        }
+
+        for (int i = 0; i < s.length(); i++) {
+            if (!removePosition[i]) {
+                result.append(s.charAt(i));
+            }
+        }
+
+        return String.valueOf(result);
+    }
+
+    public static String decodeString(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char current = s.charAt(i);
+
+            if (current == '[') {
+                stack.push(current);
+            } else if (current == ']') {
+                
+            }
+        }
+        return "";
+    }
+
+    public static int maxDepth(String s) {
+        Stack<Character> stack = new Stack<>();
+
+        int maxDepth = 0;
+        int currentDepth = 0;
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                currentDepth++;
+                maxDepth = Math.max(currentDepth, maxDepth);
+            } else if (c == ')') {
+                currentDepth--;
+            }
+        }
+
+        return maxDepth;
+    }
+
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int nums[] = new int[n];
-        for (int i = 0; i < n; i++) {
-            nums[i] = sc.nextInt();
-        }
-        System.out.println(productExceptSelfGPT(nums));
+        int[] nums6 = {2, 0, 3, -2, 4};
+        System.out.println("Test case 6: " + maxProduct(nums6));
 
     }
 }

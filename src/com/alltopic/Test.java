@@ -1,4 +1,4 @@
-package Sorting;
+package com.alltopic;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -17,14 +17,11 @@ public class Test {
         }
     }
     public static void main(String[] args) {
-        ArrayList<String> words = new ArrayList<>();
-        words.add("abcd");
-        words.add("abe");
-        words.add("abce");
-        words.add("bbcd");
-        words.add("abce");
-        words.add("abg");
-        compare(words);
+        String str1 = new String("Hello");
+        // Tạo một biến tham chiếu str2 và gán giá trị của str1 cho nó
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("Nicola", "Agata", "Maria", "Agata"));
+        
+
 
         
     }
