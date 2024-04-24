@@ -17,12 +17,14 @@ public class Test {
         }
     }
     public static void main(String[] args) {
-        String str1 = new String("Hello");
-        // Tạo một biến tham chiếu str2 và gán giá trị của str1 cho nó
-        ArrayList<String> list = new ArrayList<>(Arrays.asList("Nicola", "Agata", "Maria", "Agata"));
-        
+        int[] n1 = {2, 3, 12, 4, 12, -2};
+        int[] n2 = new int[n1.length];
+
+        System.arraycopy(n1, 2, n2, 3, 2);
+        System.out.println("n2 = " + Arrays.toString(n2));
 
 
-        
+
+
     }
 }

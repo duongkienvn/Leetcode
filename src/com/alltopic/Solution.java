@@ -318,9 +318,11 @@ public class Solution {
     }
 
     public static boolean isPalindrome(String s, int left, int right) {
-
         while (left < right) {
-            if (s.charAt(left) != s.charAt(right)) return false;
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+
             left++;
             right--;
         }
@@ -1779,16 +1781,127 @@ public class Solution {
     public static String decodeString(String s) {
         Stack<Character> stack = new Stack<>();
 
+        int count = 0;
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
-            char current = s.charAt(i);
+            char c = s.charAt(i);
 
-            if (current == '[') {
-                stack.push(current);
-            } else if (current == ']') {
-                
+            if (c == ']') {
+                String temp = "";
+                while (stack.peek() != '[') {
+                    temp = stack.pop() + temp;
+                }
+
+                // remove '['
+                stack.pop();
+                String getNumber = "";
+                while (!stack.isEmpty() && Character.isDigit(stack.peek())) {
+                    getNumber = stack.pop() + getNumber;
+                }
+
+                int number = Integer.valueOf(getNumber);
+                temp = temp.repeat(number);
+
+                for (int j = 0; j < temp.length(); j++) {
+                    stack.push(temp.charAt(j));
+                }
+            } else {
+                stack.push(c);
             }
         }
-        return "";
+
+        while (!stack.isEmpty()) {
+            result.append(stack.pop());
+        }
+        result = result.reverse();
+
+        return String.valueOf(result);
+    }
+
+    public static String stringAfterBackSpace(String s, Stack<Character> stack) {
+        for (char c : s.toCharArray()) {
+            if (c != '#') {
+                stack.push(c);
+            } else {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            }
+        }
+
+        String sAfterBackSpace = "";
+        while (!stack.isEmpty()) {
+            sAfterBackSpace = stack.pop() + sAfterBackSpace;
+        }
+
+        return sAfterBackSpace;
+    }
+
+    public static boolean backspaceCompare(String s, String t) {
+        Stack<Character> stack = new Stack<>();
+
+        String sAfterBackSpace = stringAfterBackSpace(s, stack);
+        String tAfterBackSpace = stringAfterBackSpace(t, stack);
+
+        return sAfterBackSpace.equals(tAfterBackSpace);
+    }
+
+    public static int[] finalPrices(int[] prices) {
+        int length = prices.length;
+        int result[] = new int[length];
+
+        for (int i = 0; i < length - 1; i++) {
+            for (int j = i + 1; j < length; j++) {
+                if (prices[j] <= prices[i]) {
+                    result[i] = prices[i] - prices[j];
+                    break;
+                } else {
+                    result[i] = prices[i];
+                }
+            }
+        }
+        result[length - 1] = prices[length - 1];
+        return result;
+    }
+
+    public static int[] finalPricesC2(int[] prices) {
+        int length = prices.length;
+        int result[] = new int[length];
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < length; i++) {
+            while (!stack.isEmpty() && prices[stack.peek()] >= prices[i]) {
+                int index = stack.pop();
+                result[index] = prices[index] - prices[i];
+            }
+            stack.push(i);
+        }
+
+        while (!stack.isEmpty()) {
+            int index = stack.pop();
+            result[index] = prices[index];
+        }
+
+        return result;
+    }
+
+    public static int minOperations(String[] logs) {
+        int length = logs.length;
+        Stack<String> stack = new Stack<>();
+
+        for (int i = 0; i < length; i++) {
+            if (logs[i].equals("../")) {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            } else if (logs[i].equals("./")) {
+                continue;
+            } else {
+                stack.push(logs[i]);
+            }
+        }
+
+        return stack.size();
     }
 
     public static int maxDepth(String s) {
@@ -1808,11 +1921,881 @@ public class Solution {
         return maxDepth;
     }
 
+    public static boolean checkValidString(String s) {
+        int length = s.length();
+        Stack<Integer> leftParenthesises = new Stack<>();
+        Stack<Integer> starts = new Stack<>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char currentChar = s.charAt(i);
+
+            if (currentChar == '(') {
+                leftParenthesises.push(i);
+            } else if (currentChar == '*') {
+                starts.push(i);
+            } else {
+                if (!leftParenthesises.isEmpty()) {
+                    leftParenthesises.pop();
+                } else if (!starts.isEmpty()) {
+                    starts.pop();
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        while (!leftParenthesises.isEmpty() && !starts.isEmpty()) {
+            if (leftParenthesises.peek() > starts.peek()) {
+                return false;
+            }
+            leftParenthesises.pop();
+            starts.pop();
+        }
+
+        return leftParenthesises.isEmpty();
+    }
+
+    public static void generate(List<String> result, String current,
+                                int open, int close, int n) {
+        // base case: if the length of current string equals 2 * n
+        if (current.length() == 2 * n) {
+            result.add(current);
+            return;
+        }
+
+        if (open < n) {
+            generate(result, current + "(", open + 1, close, n);
+        }
+
+        if (close < open) {
+            generate(result, current + ")", open, close + 1, n);
+        }
+    }
+
+    public static List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+        generate(result, "", 0, 0, n);
+        return result;
+    }
+
+    public static int countStudents(int[] students, int[] sandwiches) {
+        int circularPref = 0, squarePref = 0;
+
+        for (int student : students) {
+            if (student == 0) {
+                circularPref++;
+            } else {
+                squarePref++;
+            }
+        }
+
+        for (int sandwich : sandwiches) {
+            if (sandwich == 0) {
+                if (circularPref > 0) {
+                    circularPref--;
+                } else {
+                    break;
+                }
+            } else {
+                if (squarePref > 0) {
+                    squarePref--;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return circularPref + squarePref;
+    }
+
+    public static int timeRequiredToBuy(int[] tickets, int k) {
+        int time = 0;
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < tickets.length; i++) {
+            if (min > tickets[i]) {
+                min = tickets[i];
+            }
+        }
+        return 1;
+    }
+
+    public static List<List<String>> solveNQueens(int n) {
+        return new ArrayList<>();
+    }
+
+    public static int longestAlternatingSubarray(int[] nums, int threshold) {
+        int length = nums.length;
+        int left = 0, right = 0;
+        int oddCount = 0, evenCount = 0;
+        int maxLength = 0;
+
+        while (right < length) {
+            if (nums[right] % 2 == 0) {
+                evenCount++;
+            } else {
+                oddCount++;
+            }
+
+            while (oddCount > 1 || nums[right] > threshold) {
+                if (nums[left] % 2 == 0) {
+                    evenCount--;
+                } else {
+                    oddCount--;
+                }
+                left++;
+            }
+
+            maxLength = Math.max(maxLength, right - left + 1);
+            right++;
+        }
+
+        return maxLength;
+    }
+
+    class MyStack {
+        private Queue<Integer> queue1;
+        private Queue<Integer> queue2;
+        private int topElement;
+
+        public MyStack() {
+            queue1 = new LinkedList<>();
+            queue2 = new LinkedList<>();
+        }
+
+        public void push(int x) {
+            queue1.offer(x);
+            topElement = x;
+        }
+
+        public int pop() {
+            while (queue1.size() > 1) {
+                topElement = queue1.poll();
+                queue2.offer(topElement);
+            }
+            int popped = queue1.poll();
+            Queue<Integer> temp = queue1;
+            queue1 = queue2;
+            queue2 = temp;
+
+            return popped;
+        }
+
+        public int top() {
+            return topElement;
+        }
+
+        public boolean empty() {
+            return queue1.isEmpty();
+        }
+    }
+
+    class MyQueue {
+        private Stack<Integer> stack1;
+        private Stack<Integer> stack2;
+
+        public MyQueue() {
+            stack1 = new Stack<>();
+            stack2 = new Stack<>();
+        }
+
+        public void push(int x) {
+            stack1.push(x);
+        }
+
+        public int pop() {
+            while (stack2.isEmpty()) {
+                while (!stack1.isEmpty()) {
+                    stack2.push(stack1.pop());
+                }
+            }
+            return stack2.pop();
+        }
+
+        public int peek() {
+            while (stack2.isEmpty()) {
+                while (!stack1.isEmpty()) {
+                    stack2.push(stack1.pop());
+                }
+            }
+            return stack2.peek();
+        }
+
+        public boolean empty() {
+            return stack1.isEmpty() && stack2.isEmpty();
+        }
+    }
+
+    public static String simplifyPath(String path) {
+        //   /a/./b/../../c/
+
+        Stack<String> stack = new Stack<>();
+        String parts[] = path.split("/");
+
+        for (String part : parts) {
+            System.out.println(part);
+        }
+
+        for (String part : parts) {
+            if (part.equals("..")) {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                }
+            } else if (!part.equals(".") && !part.isEmpty()) {
+                stack.push(part);
+            }
+        }
+
+        StringBuilder result = new StringBuilder("/");
+        for (String dir : stack) {
+            result.append(dir).append("/");
+        }
+
+        if (result.length() > 1) {
+            result.delete(result.length() - 1, result.length());
+        }
+
+        return String.valueOf(result);
+    }
+
+    public static int scoreOfParentheses(String s) {
+        // nghi cach khac
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
+
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                stack.push(0);
+            } else {
+                int current = stack.pop();
+                int previous = stack.pop();
+                stack.push(previous + Math.max(current * 2, 1));
+            }
+        }
+
+        return stack.pop();
+    }
+
+    public static String removeStars(String s) {
+        StringBuilder sb = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+            if (c != '*') {
+                stack.push(c);
+            } else {
+                stack.pop();
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            sb.append(stack.pop());
+        }
+        sb = sb.reverse();
+
+        return String.valueOf(sb);
+    }
+
+    public static void backtrack(int nums[], List<List<Integer>> result,
+                                 List<Integer> current, boolean used[]) {
+        if (current.size() == nums.length) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (!used[i]) {
+                current.add(nums[i]);
+                used[i] = true;
+                backtrack(nums, result, current, used);
+                current.remove(current.size() - 1);
+                used[i] = false;
+            }
+        }
+    }
+
+    public static List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> current = new ArrayList<>();
+        boolean used[] = new boolean[nums.length];
+        backtrack(nums, result, current, used);
+        return result;
+    }
+
+    public static int[] deckRevealedIncreasing(int[] deck) {
+        int length = deck.length;
+        Arrays.sort(deck);
+
+        Queue<Integer> indexQueue = new LinkedList<>();
+        for (int i = 0; i < length; i++) {
+            indexQueue.offer(i);
+        }
+
+        int result[] = new int[length];
+        for (int card : deck) {
+            result[indexQueue.poll()] = card;
+            if (!indexQueue.isEmpty()) {
+                indexQueue.offer(indexQueue.poll());
+            }
+        }
+
+        return result;
+    }
+
+    public static String removeDuplicateLetters(String s) {
+        Stack<Character> stack = new Stack<>();
+        boolean visited[] = new boolean[26];
+        int count[] = new int[26];
+
+        for (char c : s.toCharArray()) {
+            count[c - 'a']++;
+        }
+
+        for (char c : s.toCharArray()) {
+            count[c - 'a']--;
+            if (visited[c - 'a']) {
+                continue;
+            }
+
+            while (!stack.isEmpty() && c < stack.peek() && count[stack.peek() - 'a'] > 0) {
+                visited[stack.pop() - 'a'] = false;
+            }
+
+            stack.push(c);
+            visited[c - 'a'] = true;
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (char c : stack) {
+            result.append(c);
+        }
+
+        return result.toString();
+    }
+
+    public static boolean buddyStrings(String s, String goal) {
+        if (s.length() != goal.length()) {
+            return false;
+        }
+
+        Map<Character, Integer> frequency = new HashMap<>();
+        int countGreaterTwo = 0;
+        for (char c : s.toCharArray()) {
+            frequency.put(c, frequency.getOrDefault(c, 0) + 1);
+            if (frequency.get(c) >= 2) {
+                countGreaterTwo++;
+            }
+        }
+
+        if (s.equals(goal)) {
+            if (countGreaterTwo >= 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        char tempS = ' ', tempGoal = ' ';
+        int count = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            char sChar = s.charAt(i);
+            char goalChar = goal.charAt(i);
+            if (sChar != goalChar) {
+                count++;
+            }
+        }
+        if (count > 2 || count == 1) {
+            return false;
+        }
+
+        int dem = 0;
+        Map<Character, Character> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char sChar = s.charAt(i);
+            char goalChar = goal.charAt(i);
+
+            if (sChar != goalChar) {
+                dem++;
+                if (map.isEmpty()) {
+                    tempS = sChar;
+                    tempGoal = goalChar;
+                }
+                map.put(sChar, goalChar);
+                if (!map.isEmpty() && !map.get(sChar).equals(tempS) && dem == 2) {
+                    return false;
+                }
+
+                if (!map.isEmpty() && sChar != tempGoal && dem == 2) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static int uniqueMorseRepresentations(String[] words) {
+        final String MORSE_CODE[] = {".-", "-...", "-.-.", "-..", ".", "..-.", "--.",
+                "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-",
+                ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.."};
+
+        Set<String> transformations = new HashSet<>();
+        for (String word : words) {
+            StringBuilder transformation = new StringBuilder();
+
+            for (char c : word.toCharArray()) {
+                transformation.append(MORSE_CODE[c - 'a']);
+            }
+
+            transformations.add(transformation.toString());
+        }
+
+        return transformations.size();
+    }
+
+    public static String shortestCompletingWord(String licensePlate, String[] words) {
+        String digit = licensePlate.replaceAll("[^a-zA-Z]", "").toLowerCase();
+        String shortestWord = null;
+
+        Map<Character, Integer> frequency = new HashMap<>();
+        for (char c : digit.toCharArray()) {
+            frequency.put(c, frequency.getOrDefault(c, 0) + 1);
+        }
+
+        for (String word : words) {
+            if (shortestWord != null && word.length() >= shortestWord.length()) {
+                continue;
+            }
+
+            Map<Character, Integer> remainingChars = new HashMap<>(frequency);
+            for (char c : word.toCharArray()) {
+                if (remainingChars.containsKey(c)) {
+                    remainingChars.put(c, remainingChars.get(c) - 1);
+                    if (remainingChars.get(c) == 0) {
+                        remainingChars.remove(c);
+                    }
+                }
+            }
+
+            if (remainingChars.isEmpty()) {
+                shortestWord = word;
+            }
+        }
+
+        return shortestWord;
+    }
+
+    public static int[] shortestToChar(String s, char c) {
+        int length = s.length();
+        int result[] = new int[length];
+
+        int left = -1, right = -1;
+        for (int i = 0; i < length; i++) {
+            if (s.charAt(i) == c) {
+                left = i;
+            }
+
+            if (left != -1) {
+                result[i] = i - left;
+            } else {
+                result[i] = Integer.MAX_VALUE;
+            }
+        }
+
+        for (int i = length - 1; i >= 0; i--) {
+            if (s.charAt(i) == c) {
+                right = i;
+            }
+
+            if (right != -1) {
+                result[i] = Math.min(result[i], right - i);
+            }
+        }
+
+        return result;
+    }
+
+    static class alienComparator implements Comparator<String> {
+        private String order;
+
+        public alienComparator(String order) {
+            this.order = order;
+        }
+
+        @Override
+        public int compare(String left, String right) {
+            int minLength = Math.min(left.length(), right.length());
+            for (int i = 0; i < minLength; i++) {
+                char charLeft = left.charAt(i);
+                char charRight = right.charAt(i);
+                int indexLeft = order.indexOf(charLeft);
+                int indexRight = order.indexOf(charRight);
+                if (indexLeft != indexRight) {
+                    return indexLeft - indexRight;
+                }
+            }
+            return left.length() - right.length();
+        }
+    }
+
+    public static boolean isAlienSorted(String[] words, String order) {
+        String copied[] = words.clone();
+        Arrays.sort(copied, new alienComparator(order));
+
+        return Arrays.equals(words, copied);
+    }
+
+    public static boolean isAlienSortedC2(String[] words, String order) {
+        Map<Character, Integer> orderMap = new HashMap<>();
+        for (int i = 0; i < order.length(); i++) {
+            orderMap.put(order.charAt(i), i);
+        }
+
+        String copied[] = words.clone();
+        Arrays.sort(copied, (a, b) -> {
+            int minLength = Math.min(a.length(), b.length());
+            for (int i = 0; i < minLength; i++) {
+                char charLeft = a.charAt(i);
+                char charRight = b.charAt(i);
+                int indexLeft = orderMap.get(charLeft);
+                int indexRight = orderMap.get(charRight);
+                if (indexRight != indexLeft) {
+                    return indexLeft - indexRight;
+                }
+            }
+            return a.length() - b.length();
+        });
+
+        return Arrays.equals(words, copied);
+    }
+
+    public static void backtrack(List<List<String>> result, List<String> tempList,
+                                 String s, int start) {
+        if (start == s.length()) {
+            result.add(new ArrayList<>(tempList));
+        } else {
+            for (int i = start; i < s.length(); i++) {
+                if (isPalindrome(s, start, i)) {
+                    tempList.add(s.substring(start, i + 1));
+                    backtrack(result, tempList, s, i + 1);
+                    tempList.remove(tempList.size() - 1);
+                }
+            }
+        }
+    }
+
+    public static List<List<String>> partition(String s) {
+        List<List<String>> result = new ArrayList<>();
+        List<String> tempList = new ArrayList<>();
+        backtrack(result, tempList, s, 0);
+        return result;
+    }
+
+    public static int minCut(String s) {
+        int length = s.length();
+        int dp[] = new int[length];
+        boolean isPalindrome[][] = new boolean[length][length];
+
+        // Initialize dp array with maximum possible cuts for each index
+        for (int i = 0; i < length; i++) {
+            dp[i] = i;
+        }
+
+        for (int end = 0; end < length; end++) {
+            for (int start = 0; start <= end; start++) {
+                if (s.charAt(start) == s.charAt(end) &&
+                        (end - start <= 1 || isPalindrome[start + 1][end - 1])) {
+                    isPalindrome[start][end] = true;
+                    if (start == 0) {
+                        dp[end] = 0;
+                    } else {
+                        dp[end] = Math.min(dp[end], dp[start - 1] + 1);
+                    }
+                }
+            }
+        }
+
+        return dp[length - 1];
+    }
+
+    private String result = "";
+    private int count = 0;
+
+    public void backtracking(int n, int k, String permutation, boolean used[]) {
+        if (permutation.length() == n) {
+            count++;
+            if (count == k) {
+                result = permutation;
+            }
+            return;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            if (!used[i]) {
+                used[i] = true;
+                backtracking(n, k, permutation + i, used);
+                used[i] = false;
+            }
+        }
+    }
+
+    public String getPermutation(int n, int k) {
+        boolean used[] = new boolean[n + 1];
+        backtracking(n, k, "", used);
+
+        return result;
+    }
+
+    public static void backtrackUnique(int nums[], List<List<Integer>> result,
+                                       List<Integer> current, boolean used[]) {
+        if (current.size() == nums.length) {
+            List<Integer> temp = new ArrayList<>(current);
+            if (!result.contains(temp)) {
+                result.add(temp);
+            }
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (!used[i]) {
+                    used[i] = true;
+                    current.add(nums[i]);
+                    backtrackUnique(nums, result, current, used);
+                    current.remove(current.size() - 1);
+                    used[i] = false;
+                }
+            }
+        }
+    }
+
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        boolean used[] = new boolean[nums.length];
+        backtrackUnique(nums, result, new ArrayList<>(), used);
+
+        return result;
+    }
+
+    public void backtrack(StringBuilder combination, List<String> result, String digits,
+                          Map<Character, String> map, int index) {
+        if (index == digits.length()) {
+            result.add(combination.toString());
+            return;
+        }
+
+        char digit = digits.charAt(index);
+        String leters = map.get(digit);
+        for (int i = 0; i < leters.length(); i++) {
+            combination.append(leters.charAt(i));
+            backtrack(combination, result, digits, map, index + 1);
+            combination.deleteCharAt(combination.length() - 1);
+        }
+    }
+
+    public List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<>();
+        if (digits == null || digits.length() == 0) {
+            return result;
+        }
+
+        Map<Character, String> map = new HashMap<>();
+        map.put('2', "abc");
+        map.put('3', "def");
+        map.put('4', "ghi");
+        map.put('5', "jkl");
+        map.put('6', "mno");
+        map.put('7', "pqrs");
+        map.put('8', "tuv");
+        map.put('9', "wxyz");
+
+        backtrack(new StringBuilder(), result, digits, map, 0);
+        return result;
+    }
+
+    public void backtrack(List<List<Integer>> result, List<Integer> combination, int candidates[],
+                          int target, int start) {
+        if (target == 0) {
+            result.add(new ArrayList<>(combination));
+            return;
+        }
+
+        for (int i = start; i < candidates.length && candidates[i] <= target; i++) {
+            combination.add(candidates[i]);
+            backtrack(result, combination, candidates, target - candidates[i], i);
+            combination.remove(combination.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(candidates);
+        backtrack(result, new ArrayList<>(), candidates, target, 0);
+
+        return result;
+    }
+
+    public void backtrackSum2(List<List<Integer>> result, List<Integer> combination, int candidates[],
+                              int target, int start) {
+        if (target == 0) {
+            result.add(new ArrayList<>(combination));
+            return;
+        }
+
+        for (int i = start; i < candidates.length && candidates[i] <= target; i++) {
+            if (i > start && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            combination.add(candidates[i]);
+            backtrackSum2(result, combination, candidates, target - candidates[i], i + 1);
+            combination.remove(combination.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(candidates);
+        backtrackSum2(result, new ArrayList<>(), candidates, target, 0);
+
+        return result;
+    }
+
+    public int backtrackSum4(int nums[], int target, Map<Integer, Integer> memory) {
+        if (target == 0) {
+            return 1;
+        }
+
+        if (memory.containsKey(target)) {
+            return memory.get(target);
+        }
+
+        int count = 0;
+        for (int num : nums) {
+            if (num <= target) {
+                count += backtrackSum4(nums, target - num, memory);
+            }
+        }
+
+        memory.put(target, count);
+        return count;
+    }
+
+
+    public int combinationSum4(int[] nums, int target) {
+        return backtrackSum4(nums, target, new HashMap<>());
+    }
+
+    public int combinationSum4DP(int[] nums, int target) {
+        int dp[] = new int[target + 1];
+        dp[0] = 1;
+
+        // dp[i] tính toan so cach ket hop de tao ra tong i
+        for (int i = 1; i <= target; i++) {
+            for (int num : nums) {
+                if (i - num >= 0) {
+                    dp[i] += dp[i - num];
+                }
+            }
+        }
+
+        return dp[target];
+    }
+
+    public int tribonacci(int n) {
+        int fibo[] = new int[92];
+        fibo[0] = 0;
+        fibo[1] = 1;
+        fibo[2] = 1;
+
+        for (int i = 3; i <= n; i++) {
+            fibo[i] = fibo[i - 3] + fibo[i - 2] + fibo[i - 1];
+        }
+
+        return fibo[n];
+    }
+
+    public String reverseWords(String s) {
+        s = s.trim();
+        s = s.replaceAll("\\s+", " ");
+        String arrString[] = s.split(" ");
+        int left = 0, right = arrString.length - 1;
+        while (left < right) {
+            String temp = arrString[left];
+            arrString[left] = arrString[right];
+            arrString[right] = temp;
+            left++;
+            right--;
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (String str : arrString) {
+            result.append(str).append(" ");
+        }
+
+        result.deleteCharAt(result.length() - 1);
+        return String.valueOf(result);
+    }
+
+    public List<String> restoreIpAddresses(String s) {
+        List<String> result = new ArrayList<>();
+        
+        return result;
+    }
+
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        Stack<Integer> stack = new Stack<>();
+        int index = 0;
+
+        for (int num : pushed) {
+            stack.push(num);
+            while (!stack.isEmpty() && stack.peek() == popped[index]) {
+                stack.pop();
+                index++;
+            }
+        }
+
+        return stack.isEmpty();
+    }
+
+    public String convert(String s, int numRows) {
+        
+        return "";
+    }
+
+    public int numDistinct(String s, String t) {
+        int length = s.length();
+
+        return 1;
+    }
+
+    public boolean isVowel(char c) {
+        c = Character.toLowerCase(c);
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+    }
+
+    public String toGoatLatin(String sentence) {
+        StringBuilder result = new StringBuilder();
+        String words[] = sentence.split(" ");
+        int index = 1;
+
+        for (String word : words) {
+            if (isVowel(word.charAt(0))) {
+                result.append(word).append("ma");
+            } else {
+                result.append(word.substring(1)).append(word.charAt(0)).append("ma");
+            }
+
+            for (int i = 0; i < index; i++) {
+                result.append("a");
+            }
+
+            result.append(" ");
+            index++;
+        }
+
+        return result.toString().trim();
+    }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int[] nums6 = {2, 0, 3, -2, 4};
-        System.out.println("Test case 6: " + maxProduct(nums6));
-
+        Solution solution = new Solution();
+        int n = 4;
+        System.out.println(solution.tribonacci(n));
     }
 }
