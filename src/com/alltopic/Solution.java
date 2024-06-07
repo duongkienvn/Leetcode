@@ -2733,9 +2733,41 @@ public class Solution {
         return String.valueOf(result);
     }
 
+    private boolean isValidSegment(String segment) {
+        if (segment.length() > 1 && segment.startsWith("0")) {
+            return false;
+        }
+        int value = Integer.parseInt(segment);
+
+        return value >= 0 && value <= 255;
+    }
+
+    public void backtrack(List<String> result, String s, List<String> current, int start) {
+        if (current.size() == 4) {
+            if (start == s.length()) {
+                result.add(String.join(".", current));
+            }
+            return;
+        }
+
+        for (int i = 1; i <= 3; i++) {
+            if (start + i > s.length()) {
+                break;
+            }
+
+            String segment = s.substring(start, start + i);
+            if (isValidSegment(segment)) {
+                current.add(segment);
+                backtrack(result, s, current, start + i);
+                current.remove(current.size() - 1);
+            }
+        }
+    }
+
     public List<String> restoreIpAddresses(String s) {
         List<String> result = new ArrayList<>();
-        
+        backtrack(result, s, new ArrayList<>(), 0);
+
         return result;
     }
 
@@ -2755,7 +2787,7 @@ public class Solution {
     }
 
     public String convert(String s, int numRows) {
-        
+
         return "";
     }
 
@@ -2793,9 +2825,1019 @@ public class Solution {
         return result.toString().trim();
     }
 
+    private void backtrack(Map<Character, Integer> map, String sequence, List<String> result) {
+        for (char c : map.keySet()) {
+            int count = map.get(c);
+            if (count == 0) {
+                continue;
+            }
+            map.put(c, count - 1);
+            String newSequence = sequence + c;
+            result.add(newSequence);
+            backtrack(map, sequence, result);
+            map.put(c, count);
+        }
+    }
+
+    public int numTilePossibilities(String tiles) {
+        Map<Character, Integer> frequency = new HashMap<>();
+        for (char title : tiles.toCharArray()) {
+            frequency.put(title, frequency.getOrDefault(title, 0) + 1);
+        }
+
+        List<String> result = new ArrayList<>();
+        backtrack(frequency, "", result);
+
+        return result.size();
+    }
+
+    public List<List<Integer>> largeGroupPositions(String s) {
+        List<List<Integer>> result = new ArrayList<>();
+
+        for (int left = 0; left < s.length(); left++) {
+            int right = left + 1;
+            if (left > 0 && s.charAt(left) == s.charAt(left - 1)) {
+                continue;
+            }
+            int count = 1;
+            while (right < s.length() && s.charAt(left) == s.charAt(right)) {
+                right++;
+                count++;
+            }
+
+            if (count >= 3) {
+                List<Integer> interval = new ArrayList<>();
+                interval.add(left);
+                interval.add(right - 1);
+                result.add(interval);
+            }
+        }
+
+        return result;
+    }
+
+    public int minDeletionSize(String[] strs) {
+        int numColsToDelete = 0;
+        int numRows = strs.length;
+        int numCols = strs[0].length();
+
+        for (int j = 0; j < numCols; j++) {
+            for (int i = 0; i < numRows - 1; i++) {
+                if (strs[i].charAt(j) > strs[i + 1].charAt(j)) {
+                    numColsToDelete++;
+                    break;
+                }
+            }
+        }
+
+        return numColsToDelete;
+    }
+
+    public int[] diStringMatch(String s) {
+        int length = s.length();
+        int perm[] = new int[length + 1];
+
+        List<Integer> range = new ArrayList<>();
+        for (int i = 0; i <= s.length(); i++) {
+            range.add(i);
+        }
+
+        for (int i : range) {
+            System.out.println(i);
+        }
+        for (int i = 0; i < length; i++) {
+            if (s.charAt(i) == 'I') {
+                perm[i] = range.get(0);
+                range.remove(0);
+            } else {
+                perm[i] = range.get(range.size() - 1);
+                range.remove(range.size() - 1);
+            }
+        }
+
+        perm[s.length()] = range.get(0);
+        return perm;
+    }
+
+    public int[] diStringMatchC2(String s) {
+        int length = s.length();
+        int perm[] = new int[length + 1];
+        char charArr[] = s.toCharArray();
+        int left = 0, right = length;
+        int index = 0;
+
+        while (left < right) {
+            if (charArr[index] == 'I') {
+                perm[index] = left;
+                left++;
+            } else {
+                perm[index] = right;
+                right--;
+            }
+
+            index++;
+        }
+
+        if (charArr[length - 1] == 'I') {
+            perm[index] = left;
+        } else {
+            perm[index] = right;
+        }
+
+        return perm;
+    }
+
+    public String[] findOcurrences(String text, String first, String second) {
+        String occurence[] = new String[2];
+
+        String word[] = text.split(" ");
+        int countFirst = 0, countSecond = 0;
+        for (int i = 0; i < word.length; i++) {
+            if (word[i].equals(first)) {
+                countFirst++;
+            } else if (word[i].equals(second)) {
+                countSecond++;
+            }
+
+            if (countFirst == 1 && word[i].equals(first)) {
+                occurence[0] = word[i + 2];
+            }
+            if (countSecond == 2 && word[i].equals(second)) {
+                occurence[1] = word[i + 1];
+            }
+        }
+
+        return occurence;
+    }
+
+    public void backtrack(List<List<Integer>> result, List<Integer> list, int k, int n, int start) {
+        if (k == 0) {
+            result.add(new ArrayList<>(list));
+            return;
+        }
+
+        for (int i = start; i <= n; i++) {
+            list.add(i);
+            backtrack(result, list, k - 1, n, i + 1);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result, new ArrayList<>(), k, n, 1);
+
+        return result;
+    }
+
+    public int minFallingPathSumHard(int[][] a) {
+        int length = a.length;
+
+        for (int i = 1; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                int minPreRow = Integer.MAX_VALUE;
+                for (int k = 0; k < length; k++) {
+                    if (k != j) {
+                        minPreRow = Math.min(minPreRow, a[i - 1][k]);
+                    }
+                }
+                a[i][j] += minPreRow;
+            }
+        }
+
+        int minSum = Integer.MAX_VALUE;
+        for (int j = 0; j < length; j++) {
+            if (minSum > a[length - 1][j]) {
+                minSum = a[length - 1][j];
+            }
+        }
+
+        return minSum;
+    }
+
+    public int minFallingPathSumMedium(int[][] a) {
+        int length = a.length;
+
+        for (int i = 1; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                if (j == 0) {
+                    a[i][j] += Math.min(a[i - 1][j], a[i - 1][j + 1]);
+                } else if (j == length - 1) {
+                    a[i][j] += Math.min(a[i - 1][j - 1], a[i - 1][j]);
+                } else {
+                    a[i][j] += Math.min(a[i - 1][j], Math.min(a[i - 1][j - 1], a[i - 1][j + 1]));
+                }
+            }
+        }
+
+        int minSum = Integer.MAX_VALUE;
+        for (int j = 0; j < length; j++) {
+            if (minSum > a[length - 1][j]) {
+                minSum = a[length - 1][j];
+            }
+        }
+
+        return minSum;
+    }
+
+    public int uniquePathsWithObstacles(int[][] grid) {
+        int numRows = grid.length;
+        int numCols = grid[0].length;
+
+        int dp[][] = new int[numRows][numCols];
+        dp[0][0] = 1;
+
+        if (grid[0][0] == 1 || grid[numRows - 1][numCols - 1] == 1) {
+            return 0;
+        }
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                if (grid[i][j] != 1) {
+                    if (i > 0) {
+                        dp[i][j] += grid[i][j];
+                    }
+                    if (j > 0) {
+                        dp[i][j] += grid[i][j];
+                    }
+                }
+            }
+        }
+
+        return dp[numRows - 1][numCols - 1];
+    }
+
+    class MyHashMap {
+        private final int SIZE = 10000;
+        private Node[] map;
+
+        private class Node {
+            int key;
+            int value;
+            Node next;
+
+            public Node(int key, int value) {
+                this.key = key;
+                this.value = value;
+            }
+        }
+
+        public MyHashMap() {
+            map = new Node[SIZE];
+        }
+
+        public void put(int key, int value) {
+
+        }
+
+        public int get(int key) {
+            return 1;
+        }
+
+        public void remove(int key) {
+        }
+
+        public Node find() {
+            return new Node(10, 1);
+        }
+    }
+
+    public int uniquePathsIII(int[][] grid) {
+        int numRows = grid.length;
+        int numCols = grid[0].length;
+        int walkNums = 0;
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                if (grid[i][j] == 1) {
+
+                }
+            }
+        }
+
+        return walkNums;
+    }
+
+    public String defangIPaddr(String address) {
+        address = address.replace(".", "[.]");
+        return address;
+    }
+
+    public int balancedStringSplit(String s) {
+        int maxNumber = 0;
+        int countL = 0, countR = 0;
+
+        for (char c : s.toCharArray()) {
+            if (c == 'L') {
+                countL++;
+            } else {
+                countR++;
+            }
+
+            if (countL == countR) {
+                maxNumber++;
+            }
+        }
+
+        return maxNumber;
+    }
+
+    public boolean isPalindrome(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+
+    public int removePalindromeSub(String s) {
+        if (s.isEmpty()) {
+            return 0;
+        }
+
+        if (isPalindrome(s)) {
+            return 1;
+        }
+
+        return 2;
+    }
+
+    public String gcdOfStrings(String str1, String str2) {
+        String result = "";
+        if (!str1.contains(str2)) {
+            return "";
+        }
+
+        int index = 0;
+        for (int i = 0; i < str1.length(); i++) {
+            if (i == str2.length()) {
+                index = i;
+                break;
+            }
+        }
+
+        str1 = str1.substring(index);
+        if (!str2.contains(str1)) {
+            return "";
+        }
+
+        return str1;
+    }
+
+    public int myAtoi(String s) {
+        s = s.replace("\\s+", " ");
+        String words[] = s.split(" ");
+        String result = "";
+        if (Character.isLetter(words[0].charAt(0))) {
+            return 0;
+        }
+        int count = -1;
+        for (String word : words) {
+            count++;
+            boolean check = true;
+            for (int i = 0; i < word.toCharArray().length; i++) {
+//                if (count == 0 && Character.isLetter(word.charAt(0))) {
+//                    return 0;
+//                }
+                System.out.println(1);
+                if (word.charAt(i) == '+' || word.charAt(i) == '-') {
+                    continue;
+                }
+
+                if (!Character.isDigit(word.charAt(i))) {
+                    check = false;
+                    break;
+                }
+            }
+            if (check) {
+                result += word;
+            }
+        }
+
+        String temp = result;
+        long integer = Integer.parseInt(result.toString());
+        if (integer < Math.pow(-2, -31)) {
+            return (int) Math.pow(-2, -31);
+        } else if (integer > Math.pow(2, 31) - 1) {
+            return (int) Math.pow(2, 31) - 1;
+        }
+
+        return Integer.parseInt(temp);
+    }
+
+    public String reverse(String s, int left, int right) {
+        char charArr[] = s.toCharArray();
+
+        while (left < right) {
+            char temp = charArr[left];
+            charArr[left] = charArr[right];
+            charArr[right] = temp;
+
+            left++;
+            right--;
+        }
+
+        return new String(charArr);
+    }
+
+    public String reversePrefix(String word, char ch) {
+        int firstIdx = word.indexOf(ch);
+        word = reverse(word, 0, firstIdx);
+
+        return word;
+    }
+
+    public int countCharacters(String[] words, String chars) {
+        int length = words.length;
+        Set<String> result = new HashSet<>();
+
+        System.out.println(chars);
+        int maxLength = 0;
+        for (String word : words) {
+            char charArray[] = word.toCharArray();
+            Arrays.sort(charArray);
+            String temp = String.valueOf(charArray);
+
+            if (chars.contains(temp)) {
+                maxLength += temp.length();
+            }
+        }
+
+        return maxLength;
+    }
+
+    public int compareVersion(String version1, String version2) {
+        String ver1List[] = version1.split("\\.");
+        String ver2List[] = version2.split("\\.");
+
+        int maxLength = Math.max(ver2List.length, ver1List.length);
+
+        for (int i = 0; i < maxLength; i++) {
+            int num1 = i < ver1List.length ? Integer.parseInt(ver1List[i]) : 0;
+            int num2 = i < ver2List.length ? Integer.parseInt(ver2List[i]) : 0;
+
+            if (num1 < num2) {
+                return -1;
+            } else if (num1 > num2) {
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
+    public int myAtoiGPT(String s) {
+        int index = 0;
+        int sign = 1;
+        int result = 0;
+
+        // Remove leading whitespace
+        while (index < s.length() && s.charAt(index) == ' ') {
+            index++;
+        }
+
+        // Check sign
+        if (index < s.length() && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
+            sign = (s.charAt(index++) == '-') ? -1 : 1;
+        }
+
+        // Convert digits
+        while (index < s.length() && Character.isDigit(s.charAt(index))) {
+            int digit = s.charAt(index++) - '0';
+
+            // Check for overflow
+            if (result > Integer.MAX_VALUE / 10 || (result == Integer.MAX_VALUE / 10 && digit > 7)) {
+                return (sign == 1) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+
+            result = result * 10 + digit;
+        }
+
+        return result * sign;
+    }
+
+    public void reverseRow(int row[]) {
+        int length = row.length;
+
+
+    }
+
+    public int[][] flipAndInvertImage(int[][] image) {
+        int row = image.length;
+        int col = image[0].length;
+
+        for (int i = 0; i < row; i++) {
+            int left = 0, right = row - 1;
+            for (int j = 0; j < col; j++) {
+                while (left < right) {
+                    int temp = image[i][left];
+                    image[i][left] = image[i][right];
+                    image[i][right] = temp;
+                    left++;
+                    right--;
+                }
+            }
+        }
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (image[i][j] == 0) {
+                    image[i][j] = 1;
+                } else {
+                    image[i][j] = 0;
+                }
+            }
+        }
+
+        return image;
+    }
+
+    public int numRescueBoats(int[] people, int limit) {
+        Arrays.sort(people);
+        int left = 0, right = people.length - 1;
+        int boast = 0;
+
+        while (left <= right) {
+            if (people[left] + people[right] <= limit) {
+                left++;
+            }
+            right--;
+            boast++;
+        }
+
+        return boast;
+    }
+
+    public boolean isValidSudoku(char[][] board) {
+        Map<Integer, Integer> rows[] = new HashMap[9];
+        Map<Integer, Integer> cols[] = new HashMap[9];
+        Map<Integer, Integer> boxes[] = new HashMap[9];
+
+        for (int i = 0; i < 9; i++) {
+            rows[i] = new HashMap<>();
+            cols[i] = new HashMap<>();
+            boxes[i] = new HashMap<>();
+        }
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char num = board[i][j];
+                if (num != '.') {
+                    int digit = num - '0';
+                    int boxIndex = i / 3 * 3 + j / 3;
+
+                    rows[i].put(digit, rows[i].getOrDefault(digit, 0) + 1);
+                    if (rows[i].get(digit) > 1) {
+                        return false;
+                    }
+
+                    cols[j].put(digit, cols[j].getOrDefault(digit, 0) + 1);
+                    if (cols[j].get(digit) > 1) {
+                        return false;
+                    }
+
+                    boxes[boxIndex].put(digit, boxes[boxIndex].getOrDefault(digit, 0) + 1);
+                    if (boxes[boxIndex].get(digit) > 1) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean checkValid(int[][] matrix) {
+        int length = matrix.length;
+        Map<Integer, Integer> rows[] = new HashMap[length];
+        Map<Integer, Integer> cols[] = new HashMap[length];
+
+        for (int i = 0; i < length; i++) {
+            rows[i] = new HashMap<>();
+            cols[i] = new HashMap<>();
+        }
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                int num = matrix[i][j];
+
+                rows[i].put(num, rows[i].getOrDefault(num, 0) + 1);
+                if (rows[i].get(num) > 1) {
+                    return false;
+                }
+
+                cols[j].put(num, cols[j].getOrDefault(num, 0) + 1);
+                if (cols[j].get(num) > 1) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean checkValidGPT(int[][] matrix) {
+        int lenght = matrix.length;
+
+        for (int i = 0; i < lenght; i++) {
+            Set<Integer> rowSet = new HashSet<>();
+            for (int j = 0; j < lenght; j++) {
+                int num = matrix[i][j];
+                if (num < 0 || num > lenght || !rowSet.add(num)) {
+                    return false;
+                }
+            }
+        }
+
+        for (int i = 0; i < lenght; i++) {
+            Set<Integer> colSet = new HashSet<>();
+            for (int j = 0; j < lenght; j++) {
+                int num = matrix[j][i];
+                if (num < 0 || num > lenght || !colSet.add(num)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public int[] reverseArray(int array[]) {
+        int left = 0, right = array.length - 1;
+        while (left < right) {
+            int temp = array[left];
+            array[left] = array[right];
+            array[right] = temp;
+            left++;
+            right--;
+        }
+        return array;
+    }
+
+    public String[] findRelativeRanks(int[] score) {
+        int length = score.length;
+        int copiedScore[] = score.clone();
+        Arrays.sort(copiedScore);
+        copiedScore = reverseArray(copiedScore);
+
+        Map<Integer, String> map = new HashMap<>();
+        for (int i = 0; i < length; i++) {
+            if (i == 0) {
+                map.put(copiedScore[i], "Gold Medal");
+            } else if (i == 1) {
+                map.put(copiedScore[i], "Silver Medal");
+            } else if (i == 2) {
+                map.put(copiedScore[i], "Bronze Medal");
+            } else {
+                map.put(copiedScore[i], i + 1 + "");
+            }
+        }
+
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            list.add(map.get(score[i]));
+        }
+
+        return list.toArray(new String[0]);
+    }
+
+    public void solveSudoku(char[][] board) {
+
+    }
+
+    public void backtrack(List<List<Integer>> result, List<Integer> currentList, int nums[], int start) {
+        result.add(new ArrayList<>(currentList));
+
+        for (int i = start; i < nums.length; i++) {
+            currentList.add(nums[i]);
+            backtrack(result, currentList, nums, i + 1);
+            currentList.remove(currentList.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result, new ArrayList<>(), nums, 0);
+
+        for (List<Integer> list : result) {
+            System.out.println(list);
+        }
+        return result;
+    }
+
+    public void backtrack(List<List<Integer>> result, int start, List<Integer> currentList, int nums[]) {
+        if (!result.contains(new ArrayList<>(currentList))) {
+            result.add(new ArrayList<>(currentList));
+        }
+
+        for (int i = start; i < nums.length; i++) {
+            currentList.add(nums[i]);
+            backtrack(result, i + 1, currentList, nums);
+            currentList.remove(currentList.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result, 0, new ArrayList<>(), nums);
+        return result;
+    }
+
+    public void backtrack(List<String> result, char[] chars, int index) {
+        if (index == chars.length) {
+            result.add(new String(chars));
+            return;
+        }
+
+        char c = chars[index];
+        if (Character.isLetter(c)) {
+            chars[index] = Character.toLowerCase(c);
+            backtrack(result, chars, index + 1);
+
+            chars[index] = Character.toUpperCase(c);
+            backtrack(result, chars, index + 1);
+        } else {
+            backtrack(result, chars, index + 1);
+        }
+    }
+
+    public List<String> letterCasePermutation(String s) {
+        List<String> result = new ArrayList<>();
+        backtrack(result, s.toCharArray(), 0);
+        return result;
+    }
+
+    public int[][] largestLocal(int[][] grid) {
+        int dx[] = {0, 0, 0, 1, 1, 1, 2, 2, 2};
+        int dy[] = {0, 1, 2, 0, 1, 2, 0, 1, 2};
+
+        int length = grid.length;
+        int maxLocal[][] = new int[length - 2][length - 2];
+
+        for (int i = 0; i < length - 2; i++) {
+            for (int j = 0; j < length - 2; j++) {
+                int maxValue = Integer.MIN_VALUE;
+                for (int k = 0; k < 9; k++) {
+                    maxValue = Math.max(maxValue, grid[dx[k] + i][dy[k] + j]);
+                }
+                maxLocal[i][j] = maxValue;
+            }
+        }
+
+        return maxLocal;
+    }
+
+    public void backtrack(int index, List<List<Integer>> result, List<Integer> currentList, int nums[]) {
+        if (currentList.size() >= 2) {
+            result.add(new ArrayList<>(currentList));
+        }
+
+        Set<Integer> used = new HashSet<>();
+        for (int i = index; i < nums.length; i++) {
+            if (used.contains(nums[i])) {
+                continue;
+            }
+            if (currentList.size() > 0 && nums[i] < currentList.get(currentList.size() - 1)) {
+                continue;
+            }
+
+            currentList.add(nums[i]);
+            used.add(nums[i]);
+            backtrack(i + 1, result, currentList, nums);
+            currentList.remove(currentList.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(0, result, new ArrayList<>(), nums);
+
+        return result;
+    }
+
+    public int divide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+
+        int result = dividend / divisor;
+        if (result < Integer.MIN_VALUE) {
+            return Integer.MIN_VALUE;
+        } else if (result > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        }
+        return result;
+    }
+
+    public void nextPermutation(int[] arr) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> current = new ArrayList<>();
+        boolean used[] = new boolean[arr.length];
+        backtrack(arr, result, current, used);
+
+        List<Integer> temp = new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i).equals(arr)) {
+                temp.addAll(result.get(i + 1));
+                break;
+            }
+        }
+
+        for (int i : temp) {
+            System.out.println(temp);
+        }
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = temp.get(i);
+        }
+    }
+
+    public int backtrack(int grid[][], int row, int col, boolean visited[][]) {
+        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length
+                || visited[row][col] || grid[row][col] == 0) {
+            return 0;
+        }
+
+        visited[row][col] = true;
+        int gold = grid[row][col];
+
+        int maxGold = gold + Math.max(
+                Math.max(backtrack(grid, row - 1, col, visited), backtrack(grid, row + 1, col, visited)),
+                Math.max(backtrack(grid, row, col - 1, visited), backtrack(grid, row, col + 1, visited))
+        );
+
+        visited[row][col] = false;
+
+        return maxGold;
+    }
+
+    public int getMaximumGold(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int maxGold = 0;
+
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] > 0) {
+                    boolean visited[][] = new boolean[row][col];
+                    maxGold = Math.max(maxGold, backtrack(grid, i, j, visited));
+                }
+            }
+        }
+
+        return maxGold;
+    }
+
+    public long maximumHappinessSum(int[] happiness, int k) {
+        Arrays.sort(happiness);
+        int length = happiness.length;
+        long maxSum = 0;
+
+        for (int i = length - 1; i >= 0; i--) {
+            boolean check = false;
+            if (k == 0) {
+                break;
+            }
+            maxSum += happiness[i];
+            System.out.println(happiness[i]);
+            for (int j = 0; j < i; j++) {
+                happiness[j] -= 1;
+                if (happiness[j] == 0) {
+                    check = true;
+                    break;
+                }
+            }
+            if (check) {
+                break;
+            }
+            k--;
+        }
+
+        return maxSum;
+    }
+
+    public long maximumHappinessSumGpt(int[] happiness, int k) {
+        Arrays.sort(happiness);
+        int length = happiness.length;
+        long maxSum = 0;
+
+        for (int i = length - 1; i >= 0; i--) {
+            if (k == 0 || happiness[i] == 0) {
+                break;
+            }
+            maxSum += happiness[i];
+            for (int j = 0; j < i; j++) {
+                happiness[j] -= 1;
+            }
+            k--;
+        }
+
+        return maxSum;
+    }
+
+    public int numSteps(String s) {
+        long decimal = Long.parseLong(s, 2);
+        System.out.println(decimal);
+        int step = 0;
+        while (decimal != 1) {
+            while (decimal % 2 == 0) {
+                decimal /= 2;
+                step++;
+            }
+
+            while (decimal % 2 == 1 && decimal != 1) {
+                decimal += 1;
+                step++;
+            }
+        }
+
+        return step;
+    }
+
+    public int[] singleNumber(int[] nums) {
+        Map<Integer, Integer> frequency = new HashMap<>();
+        for (int i : nums) {
+            frequency.put(i, frequency.getOrDefault(i, 0) + 1);
+        }
+
+        int result[] = new int[2];
+        int k = 0;
+        for (Map.Entry<Integer, Integer> entry : frequency.entrySet()) {
+            if (entry.getValue() == 1) {
+                result[k++] = entry.getKey();
+            }
+        }
+        return result;
+    }
+
+    public int totalNQueens(int n) {
+        // backtracking
+        int queens[] = new int[100];
+        int count = 0;
+        int d1[] = new int[100];
+        int d2[] = new int[100];
+
+        for (int i = 1; i <= n; i++) {
+
+        }
+        return 1;
+    }
+
+    public List<String> commonChars(String[] words) {
+        List<String> result = new ArrayList<>();
+        int length = words.length;
+        Map<Character, Integer> frequency = new HashMap<>();
+
+        for (int i = 0; i < length; i++) {
+            String word = words[i];
+            
+        }
+
+        return result;
+    }
+
+    public boolean isNStraightHand(int[] hand, int groupSize) {
+        if (hand.length != groupSize * groupSize) {
+            return false;
+        }
+        return true;
+    }
+
+    public String replaceWords(List<String> dictionary, String sentence) {
+        String result = "";
+        Set<String> set = new HashSet<>(dictionary);
+        String words[] = sentence.split(" ");
+
+        for (String word : words) {
+            String temp = "";
+            boolean check = false;
+            for (String s : set) {
+                if (word.contains(s)) {
+                    temp = s;
+                    check = true;
+                    break;
+                }
+            }
+            if (!check) {
+                result += word + " ";
+            } else {
+                result += temp + " ";
+            }
+        }
+        return result.trim();
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int n = 4;
-        System.out.println(solution.tribonacci(n));
+        String s = "1101";
+        System.out.println(solution.numSteps(s));
     }
 }
