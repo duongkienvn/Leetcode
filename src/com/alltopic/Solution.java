@@ -3509,6 +3509,9 @@ public class Solution {
     }
 
     public void solveSudoku(char[][] board) {
+        if (board == null || board.length == 0) {
+            return;
+        }
 
     }
 
@@ -3798,7 +3801,7 @@ public class Solution {
 
         for (int i = 0; i < length; i++) {
             String word = words[i];
-            
+
         }
 
         return result;
@@ -3833,6 +3836,65 @@ public class Solution {
             }
         }
         return result.trim();
+    }
+
+    public int heightChecker(int[] heights) {
+        int length = heights.length;
+        int copied[] = heights.clone();
+        Arrays.sort(copied);
+
+        int count = 0;
+        for (int i = 0; i < length; i++) {
+            if (heights[i] != copied[i]) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        int result[] = new int[arr1.length];
+        Map<Integer, Integer> map = new TreeMap<>();
+
+        for (int i : arr1) {
+            map.put(i, map.getOrDefault(i, 0) + 1);
+        }
+
+        int index = 0;
+        for (int i = 0; i < arr2.length; i++) {
+            int number = map.get(arr2[i]);
+            if (number != 0) {
+                for (int j = 0; j < number; j++) {
+                    result[index++] = arr2[i];
+                }
+                map.remove(arr2[i]);
+            }
+        }
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                result[index++] = entry.getKey();
+            }
+        }
+
+        return result;
+    }
+
+    public int minIncrementForUnique(int[] nums) {
+        int length = nums.length;
+        Arrays.sort(nums);
+        int moves = 0;
+
+        for (int i = 0; i < length; i++) {
+            if (nums[i] <= nums[i - 1]) {
+                int increment = nums[i - 1] + 1 - nums[i];
+                nums[i] += increment;
+                moves += increment;
+            }
+        }
+
+        return moves;
     }
 
     public static void main(String[] args) {
