@@ -1,9 +1,6 @@
 package com.alltopic;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Test {
     public static void compare(ArrayList<String> words) {
@@ -20,7 +17,14 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        double n = 34.94949499494;
-        System.out.println(String.format("%20.2f", n));
+        Optional<String> optionalName = Optional.of("Alice");
+
+        if (optionalName.isPresent()) {
+            String name = optionalName.get();
+            System.out.println("Name is: " + name);
+        }
+
+        String defaultName = (String) Optional.ofNullable(null).orElse("Default Name");
+        System.out.println("Name is: " + defaultName);
     }
 }
